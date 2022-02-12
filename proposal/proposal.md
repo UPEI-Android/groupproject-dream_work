@@ -1,5 +1,11 @@
 # Proposed
-This app will be based on the team up app as presented with additional features like calender, to-do and more. In this app, there will be an account for each individual and each individual will be able to join the group. Each group will have their goal, to-dos, responsibilities for each members and the due dates. And the specific responsibilities for an individual will be also displayed on the calender of that individual. The to-dos will have checklist feature where all the completed tasks will be marked checked which will allow the members of projects to have the track of the project progress. After we built the basic features of the app, we also have plans to add additional features enable chatting between individuals.
+This app will be based on the team up app as presented with additional features like calender, to-do and more. In this app, there will be an account for each individual and each individual will be able to join the group. 
+
+Each group will have their goal, to-dos, responsibilities for each members and the due dates. And the specific responsibilities for an individual will be also displayed on the calender of that individual. 
+
+The to-dos will have checklist feature where all the completed tasks will be marked checked which will allow the members of projects to have the track of the project progress. 
+
+After we built the basic features of the app, we also have plans to add additional features enable chatting between individuals.
 
 # Feature List
 |Feature|Priority (1-5)|Effort (1-5)|
