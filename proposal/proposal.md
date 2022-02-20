@@ -20,9 +20,9 @@ After we built the basic features of the app, we also have plans to add addition
 | Implement functions for fetch/send data| 3| 4| 
 | Design a unified user interface| 2| 2|
 | Design reusable UI component| 2| 2|
-| Chose ready-use library| 2| 2|
+| Chose existing flutter packages| 2| 2|
 | Implement reusable UI component| 3| 4|
-| Implement reusable other UI component| 4| 5|
+| Implement other UI component| 4| 5|
 | Document | 4| 2|
 
 # General Timeline
@@ -46,6 +46,9 @@ After we built the basic features of the app, we also have plans to add addition
   - ...
 
 # Back End
+
+A self-host containerized applications, will use Github Action to simplified build and deployment process.
+
 - **Framework**: ```express.js``` - Lightweight Web Framework
 - **Database**: ```redis``` - Key-value Database
 - **Library**: 
