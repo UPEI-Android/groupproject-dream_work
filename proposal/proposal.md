@@ -53,7 +53,13 @@ A self-host containerized applications, will use Github Action to simplified bui
 - **Database**: ```redis``` - Key-value Database
 - **Library**: 
   - ```redis-om``` - a Redis Client Libraries
+  - express-jwt
   - ...
+
+> Faas is another choice for back end.
+> - **platform** cloudflare worker
+> - **database** cloudflarCe KV
+> - **library** tendr/cloudflare-worker-jwt
 
 
 # Data Model
