@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
+import '../responsibility/responsibility.dart';
 import '../team/team.dart';
 
 class Individual extends Equatable{
-  late final Map<Team, List<Responsibilities>> _acceptedResponsibilities;
-  late final Map<Team, List<Responsibilities>> _notAcceptedResponsibilities;
+  late final Map<Team, List<Responsibility>> _acceptedResponsibilities;
+  late final Map<Team, List<Responsibility>> _notAcceptedResponsibilities;
   late final List<Team> _teams;
   final String _name;
   final String _id;
@@ -15,10 +16,10 @@ class Individual extends Equatable{
   }
   String getId() => _id;
   String getName() => _name;
-  Map<Team, List<Responsibilities>> getAllAcceptedResponsibilities() => _acceptedResponsibilities;
-  List<Responsibilities>? getAcceptedResponsibilities(Team team) => _acceptedResponsibilities[team];
-  Map<Team, List<Responsibilities>> getAllNotAcceptedResponsibilities() => _notAcceptedResponsibilities;
-  List<Responsibilities>? getNotAcceptedResponsibilities(Team team) => _notAcceptedResponsibilities[team];
+  Map<Team, List<Responsibility>> getAllAcceptedResponsibilities() => _acceptedResponsibilities;
+  List<Responsibility>? getAcceptedResponsibilities(Team team) => _acceptedResponsibilities[team];
+  Map<Team, List<Responsibility>> getAllNotAcceptedResponsibilities() => _notAcceptedResponsibilities;
+  List<Responsibility>? getNotAcceptedResponsibilities(Team team) => _notAcceptedResponsibilities[team];
   List<Team> getTeams() => _teams;
 
   void joinTeam(Team team){

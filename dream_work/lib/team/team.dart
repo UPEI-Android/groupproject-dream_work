@@ -1,9 +1,11 @@
 import 'package:dream_work/individual/individual.dart';
 import 'package:equatable/equatable.dart';
 
+import '../responsibility/responsibility.dart';
+
 class Team extends Equatable{
-  late final Map<Individual, List<Responsibilities>> _acceptedResponsibilities;
-  late final Map<Individual, List<Responsibilities>> _notAcceptedResponsibilities;
+  late final Map<Individual, List<Responsibility>> _acceptedResponsibilities;
+  late final Map<Individual, List<Responsibility>> _notAcceptedResponsibilities;
   late final List<Individual> _members;
   final Individual _admin;
   final String _name;
@@ -17,10 +19,10 @@ class Team extends Equatable{
   String getId() => _id;
   String getName() => _name;
   Individual getAdmin() => _admin;
-  Map<Individual, List<Responsibilities>> getAllAcceptedResponsibilities() => _acceptedResponsibilities;
-  List<Responsibilities>? getAcceptedResponsibilities(Individual individual) => _acceptedResponsibilities[individual;
-  Map<Individual, List<Responsibilities>> getAllNotAcceptedResponsibilities() => _notAcceptedResponsibilities;
-  List<Responsibilities>? getNotAcceptedResponsibilities(Individual individual) => _notAcceptedResponsibilities[individual;
+  Map<Individual, List<Responsibility>> getAllAcceptedResponsibilities() => _acceptedResponsibilities;
+  List<Responsibility>? getAcceptedResponsibilities(Individual individual) => _acceptedResponsibilities[individual];
+  Map<Individual, List<Responsibility>> getAllNotAcceptedResponsibilities() => _notAcceptedResponsibilities;
+  List<Responsibility>? getNotAcceptedResponsibilities(Individual individual) => _notAcceptedResponsibilities[individual];
   List<Individual> getMembers() => _members;
 
   void addMember(Individual individual){
@@ -55,4 +57,5 @@ class Team extends Equatable{
   @override
   bool get stringify => true;
 }
+
 
