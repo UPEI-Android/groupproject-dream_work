@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// run 'npx prisma migrate reset' to reset the database and set up the schema
+// run 'npx prisma generate' to generate schema
+// run 'npx prisma db push' to push schema to database
+
+model todoItem {
+  tid        String      @id @unique
+  gid        String      
+  members    String    
+  group      String // @unique(map: "sqlite_autoindex_group_1")
+  section    String @default(value: "default")
+  isDone     Boolean @default(value: false)
+  updatedBy  String 
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  due_at     String
+  content    String
+}
+
+model group {
+  gid        Int      @id @unique
+  name       String  
+  members    String 
+  created_at DateTime @default(now())
+}
+
+model user {
+  uid         Int      @id @unique
+  name       String        
+  email      String     
+}
