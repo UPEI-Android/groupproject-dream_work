@@ -17,27 +17,39 @@ const handler = nc<NextApiRequest, NextApiResponse>({
     },
 })  
 
-// Get a todo items by id
+// query a todo items by tid or gid
 .get(async (req, res)=> {
-    const { tid } = req.query;
-    let data = await prisma.todoItem.findUnique({
+    const { tid, gid } = req.query; 
+    let data;
+
+    data =
+    tid ? await prisma.todoItem.findUnique({
         where: {
             tid: tid as string
         }
     })
+    : gid ? await prisma.todoItem.findMany({
+        where: {
+            gid: gid as string
+        }
+    })
+    : null;
+
     data === null && res.status(400).json({ error: 'No todo item found' });
-    res.json(data);
+    res.status(200).json(data);
 })
 
 // Create a todo item
 .post(async (req, res)=> {
-    //req.body.tid
     const { gid, members, section, isDone, updated_at, create_at, due_at, content} = req.body;
-    const tid = uuidv4();
+
+    const tid = uuidv4(); // generate a unique id for the todo item
+
+    // create a todo item
     await prisma.todoItem.create({
         data: {
             tid: tid,
-            gid: gid ? gid : '',
+            gid: gid ? gid : 'none',
             members: 'test1, test2',
             section: section ? section : undefined,
             isDone: isDone ? true : false,
@@ -47,11 +59,15 @@ const handler = nc<NextApiRequest, NextApiResponse>({
             content: content? content : '',
         }
     })
+
+    // query the todo item
     let data = await prisma.todoItem.findUnique({
         where: {
             tid: tid
         }
     })
+
+    // return the todo item
     res.status(201).json({data});
 })
 
@@ -60,8 +76,24 @@ const handler = nc<NextApiRequest, NextApiResponse>({
     res.json({updated_item: 'req.file'});
 })
 
-// Delete a todo item
-.delete((req, res)=> {
+// Delete a todo item by tid or section
+.delete(async (req, res)=> {
+    const { tid, section } = req.query; 
+    let data;
+
+    data = tid ? await prisma.todoItem.findUnique({
+        where: {
+            tid: tid as string
+        }
+    })
+    : section ? await prisma.todoItem.findMany({
+        where: {
+            section: section as string
+        }
+    })
+    : null;
+
+    data === null && res.status(400).json({ error: 'No todo item found' });
     res.json({deleted_item: 'test'});
 })
 
