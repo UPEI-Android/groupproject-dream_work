@@ -30,9 +30,29 @@ const handler = nc<NextApiRequest, NextApiResponse>({
 })
 
 // Create a todo item
-.post((req, res)=> {
-    
-    res.status(201).json({created_item: req.body.tid});
+.post(async (req, res)=> {
+    //req.body.tid
+    const { gid, members, section, isDone, updated_at, create_at, due_at, content} = req.body;
+    const tid = uuidv4();
+    await prisma.todoItem.create({
+        data: {
+            tid: tid,
+            gid: gid ? gid : '',
+            members: 'test1, test2',
+            section: section ? section : undefined,
+            isDone: isDone ? true : false,
+            updated_at: undefined, //defaut
+            created_at: undefined, //defaut
+            due_at: due_at ? due_at : '',
+            content: content? content : '',
+        }
+    })
+    let data = await prisma.todoItem.findUnique({
+        where: {
+            tid: tid
+        }
+    })
+    res.status(201).json({data});
 })
 
 // Update a todo item
