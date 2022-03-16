@@ -13,10 +13,11 @@ const prisma = new PrismaClient()
 
 export default Object.create(generalHandler)
 
-.post((req : NextApiRequest, res : NextApiResponse) => {
-    const { username, password, name, email}:User = req.body;
-    if(!(username || password || name || email)) return res.status(400).json({ error: 'Incomplete information provided' })
-    prisma.user.create({
+.post(async (req : NextApiRequest, res : NextApiResponse) => {
+    const { password, username, name, email}:User = req.body;
+    if(!(password && name && email)) return res.status(400).json({ error: 'Incomplete information provided' })
+    
+    const data = await prisma.user.create({
         data: {
             username: username,
             password: password,
@@ -25,5 +26,5 @@ export default Object.create(generalHandler)
         }
     })
 
-    res.status(200).json({ success: 'User created' })
+    res.status(200).json({ success: `User created '${data.name}'` })
 })

@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client'
 
 interface User {
     username: string,
+    email: string,
     password: string,
 }
 
@@ -14,20 +15,34 @@ export default Object.create(generalHandler)
 
 .post(async (req : NextApiRequest, res : NextApiResponse) => {
     // Authenticate the user
-    const { username, password } : User = req.body
-    if(!username || !password) return res.status(400).json({ error: 'No username or password provided' })
+    const { username, email, password } : User = req.body
+    if(!((username || email) && password)) return res.status(400).json({ error: 'No username or password provided' })
 
-    const id = await prisma.user.findUnique({
+    let data:any = await prisma.user.findFirst({
         where: {
-            username: username,
+            OR: [
+                {
+                    username: username,
+                    password: password
+                },
+                {
+                    email: email,
+                    password: password
+                }
+            ],
         },
+        select: {
+            username: true,
+            name: true,
+            email: true,
+            password: false,
+        }
     })
 
-    if(id == null) return res.status(400).json({ error: 'No user found' })
-    if(id?.password !== password) return res.status(400).json({ error: 'Wrong username or password' })
-    
+    if(data == null) return res.status(400).json({ error: 'Wrong account information provided'});
+
     // Create a token
-    const accessToken = jwt.sign(username, process.env.ACCESS_TOKEN_SECRET as string)
+    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET as string)
     // authenticate seccess
     res.status(200).json({ accessToken: accessToken })
 })
