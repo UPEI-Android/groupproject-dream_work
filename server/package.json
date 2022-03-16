@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@prisma/client": "3.10.0",
+        "jsonwebtoken": "^8.5.1",
         "multer": "^1.4.4",
         "next": "12.1.0",
         "next-connect": "^0.12.2",
@@ -19,6 +20,7 @@
         "uuid": "^8.3.2"
     },
     "devDependencies": {
+        "@types/jsonwebtoken": "^8.5.8",
         "@types/multer": "^1.4.7",
         "@types/node": "^17.0.21",
         "@types/react": "17.0.40",

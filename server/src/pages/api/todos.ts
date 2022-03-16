@@ -1,12 +1,11 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import multer from 'multer';
 import nc from 'next-connect'
+import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-const form = multer()
 
 const handler = nc<NextApiRequest, NextApiResponse>({
     onError(error, req, res) {
@@ -17,9 +16,22 @@ const handler = nc<NextApiRequest, NextApiResponse>({
     },
 })  
 
+// a JWT authenticate middleware to verify the user
+const authenticateToken = (req : any, res : NextApiResponse, next : Function)=> {
+    const authHeader = req.headers.authorization;
+    if(!authHeader) return res.status(401).json({ error: 'No token provided' });
+    jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET as string, (err:any, user:any) => {
+        if(err) return res.status(403).json({ error: 'Invalid token' });
+        req.user = user;
+        next();
+    })
+}
+
+handler.use(authenticateToken)
+
 // query a todo items by tid or gid
 .get(async (req, res)=> {
-    const { tid, gid } = req.query; 
+    const { tid, gid, members } = req.query; 
     let data;
 
     data =
@@ -33,6 +45,13 @@ const handler = nc<NextApiRequest, NextApiResponse>({
             gid: gid as string
         }
     })
+    : members ? await prisma.todoItem.findMany({
+        where: {
+            members: {
+                contains: members as string
+            }
+        }
+    }) 
     : null;
 
     data === null && res.status(400).json({ error: 'No todo item found' });
@@ -93,10 +112,9 @@ const handler = nc<NextApiRequest, NextApiResponse>({
     })
     : null;
 
-    data.count == 0 && res.status(400).json({ error: 'No todo item to delete' })
+    data.count == 0 && res.status(400).json({ error: 'No todo item been delete' })
     res.status(200).json({deleted_item: data});
 })
 
-// TODO: a JWT middleware to verify the user
 
 export default handler;

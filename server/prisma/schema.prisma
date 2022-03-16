@@ -18,7 +18,7 @@ model todoItem {
   //group      String // @unique(map: "sqlite_autoindex_group_1")
   section    String   @default(value: "default")
   isDone     Boolean  @default(value: false)
-  updatedBy  String 
+  //updatedBy  String 
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   due_at     String
