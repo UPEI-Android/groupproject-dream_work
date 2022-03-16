@@ -68,7 +68,7 @@ const handler = nc<NextApiRequest, NextApiResponse>({
     })
 
     // return the todo item
-    res.status(201).json({data});
+    res.status(200).json({data});
 })
 
 // Update a todo item
@@ -78,23 +78,23 @@ const handler = nc<NextApiRequest, NextApiResponse>({
 
 // Delete a todo item by tid or section
 .delete(async (req, res)=> {
-    const { tid, section } = req.query; 
-    let data;
+    const { tid, section } = req.body
+    let data:any
 
-    data = tid ? await prisma.todoItem.findUnique({
+    data = tid ? await prisma.todoItem.delete({
         where: {
             tid: tid as string
         }
     })
-    : section ? await prisma.todoItem.findMany({
+    : section ? await prisma.todoItem.deleteMany({
         where: {
-            section: section as string
+            section: section
         }
     })
     : null;
 
-    data === null && res.status(400).json({ error: 'No todo item found' });
-    res.json({deleted_item: 'test'});
+    data.count == 0 && res.status(400).json({ error: 'No todo item to delete' })
+    res.status(200).json({deleted_item: data});
 })
 
 // TODO: a JWT middleware to verify the user
