@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/navbar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -7,6 +8,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    Size size = MediaQuery.of(context).size; // size of the screen
+    return Scaffold(
+      body: SizedBox(
+        height: size.height,
+        width: double.infinity,
+        child: Stack(
+          alignment: Alignment.center,
+          children: const [NavBar()],
+        ),
+      ),
+    );
   }
 }

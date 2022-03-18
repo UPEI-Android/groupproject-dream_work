@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-      initialRoute: AuthScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         TeamScreen.routeName: (context) => const TeamScreen(),
