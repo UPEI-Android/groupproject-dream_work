@@ -1,23 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { user } from '@prisma/client'
 import generalHandler from '../../../lib/handler/handler';
-import { PrismaClient } from '@prisma/client'
+import DatabaseClient from '../../../lib/dbclient';
 
-interface User {
-    username: string,
-    password: string,
-    name: string,
-    email: string,
-}
+const dbclient = DatabaseClient.getInstance().client;
 
-const prisma = new PrismaClient()
-
+// this is api is not protected by jwt token
 export default Object.create(generalHandler)
 
 .post(async (req : NextApiRequest, res : NextApiResponse) => {
-    const { password, username, name, email}:User = req.body;
+    const { password, username, name, email}:user = req.body;
     if(!(password && name && email)) return res.status(400).json({ error: 'Incomplete information provided' })
     
-    const data = await prisma.user.create({
+    const data = await dbclient.user.create({
         data: {
             username: username,
             password: password,

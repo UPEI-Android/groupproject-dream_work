@@ -1,54 +1,34 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiResponse } from 'next'
+import type { todoItem } from '@prisma/client';
 import handler from '../../../lib/handler/handler';
-import { v4 as uuidv4 } from 'uuid';
-import { PrismaClient } from '@prisma/client'
-import authenticateToken from '../../../lib/middleware/authenticateToken';
+import authenticateToken, {ExtendedRequest} from '../../../lib/middleware/authenticateToken';
+import DatabaseClient from '../../../lib/dbclient'
 
-const prisma = new PrismaClient()
+
+const dbclient = DatabaseClient.getInstance().client;
 
 export default Object.create(handler)
 
 .use(authenticateToken)
 
 // query a todo item by its tid(todo item id)
-.get(async (req : NextApiRequest, res: NextApiResponse)=> {
+.get(async (req : ExtendedRequest, res: NextApiResponse)=> {
     const { tid } = req.query;
 
-    let data:any = await prisma.todoItem.findUnique({
+    let data:any = await dbclient.todoItem.findUnique({
         where: {
             tid: tid as string
         }
     })
-
+    console.log(data)
     if(data.count == 0) return res.status(400).json({ error: 'No todo item found' });
     res.status(200).json(data);
 })
 
-// create a todo item
-.post(async (req : any, res: NextApiResponse)=> {
-    const { tid, section, isDone, due_at, content} = req.body;
-    const uid = req.user.name; // the user name in jwt token
-
-    let data = await prisma.todoItem.create({
-        data: {
-            tid: tid,
-            members: uid,
-            section: section ? section : undefined,
-            isDone: isDone ? true : false,
-            updated_by: uid,
-            updated_at: undefined,
-            created_at: undefined, //defaut
-            due_at: due_at ? due_at : '',
-            content: content? content : '',
-        }
-    })
-    res.status(200).json({data});
-})
-
 // delete a todo item by its tid(todo item id)
-.delete(async (req : any, res: NextApiResponse)=> {
+.delete(async (req : ExtendedRequest, res: NextApiResponse)=> {
     const { tid } = req.query;
-    let data:any = await prisma.todoItem.deleteMany({
+    let data:any = await dbclient.todoItem.deleteMany({
         where: {
             tid: tid as string,
             members: {
@@ -61,11 +41,11 @@ export default Object.create(handler)
 })
 
 // update a todo item by its tid(todo item id)
-.put(async (req : any, res: NextApiResponse)=> {
+.put(async (req : ExtendedRequest, res: NextApiResponse)=> {
     const {tid, section, isDone, create_at, due_at, content} = req.body;
     const uid = req.user.name; // the user name in jwt token
 
-    let data:any = await prisma.todoItem.updateMany({
+    let data:any = await dbclient.todoItem.updateMany({
         data:{
             updated_by : uid,
             updated_at : undefined, //defaut

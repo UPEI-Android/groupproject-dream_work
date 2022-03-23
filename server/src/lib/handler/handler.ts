@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import nc from 'next-connect'
+import logger from '../../lib/middleware/logger';
+
 
 export default nc<NextApiRequest, NextApiResponse>({
     onError(error, req, res) {
@@ -9,3 +11,5 @@ export default nc<NextApiRequest, NextApiResponse>({
         res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
     },
 })
+
+.use(logger)
