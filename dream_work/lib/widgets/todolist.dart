@@ -6,11 +6,23 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        // demo
-        for (int i = 0; i < 20; i++) const TodoTag(),
-      ],
+    List<DemoItem> demoList = List.generate(
+        20,
+        (index) =>
+            DemoItem('demo item $index', false)); // todo add a real stream
+
+    return ListView.builder(
+      itemCount: demoList.length,
+      itemBuilder: (context, index) => TodoTag(
+        prop: demoList[index],
+      ),
     );
   }
+}
+
+// todo replace this
+class DemoItem {
+  final String title;
+  final bool isDone;
+  DemoItem(this.title, this.isDone);
 }

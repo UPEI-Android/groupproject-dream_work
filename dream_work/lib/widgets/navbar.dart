@@ -1,9 +1,55 @@
 import 'package:flutter/material.dart';
 import '../screens/screens.dart';
 
-/// A fixed possition hover navigation bar contains a [buttonHolder].
+///----------------------------------------------------------------------------
+/// A custom navigation bar
+///----------------------------------------------------------------------------
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key}) : super(key: key);
+  const NavBar({Key? key, required this.tabController}) : super(key: key);
+  final TabController tabController;
+
+  /// A button that navigates to the [HomeScreen].
+  Widget navButton({required Icon icon, required int index}) => IconButton(
+        icon: icon,
+        color: const Color.fromARGB(255, 0, 255, 229),
+        onPressed: () {
+          tabController.animateTo(index);
+        },
+      );
+
+  /// A container hold the [homeButton], [teamButton] and [calendarButton].
+  Widget buttonHolder() => Container(
+        decoration: BoxDecoration(
+          color: Colors.deepPurpleAccent,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(50),
+          ),
+          border: Border.all(
+            color: Colors.black,
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              blurRadius: 7,
+              spreadRadius: 5,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ButtonBar(
+          alignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          buttonHeight: 8,
+          buttonPadding: const EdgeInsets.all(0.1),
+          children: [
+            navButton(icon: const Icon(Icons.group), index: 1),
+            navButton(icon: const Icon(Icons.home), index: 0),
+            navButton(icon: const Icon(Icons.calendar_today), index: 2),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; // size of the screen
@@ -17,45 +63,3 @@ class NavBar extends StatelessWidget {
     );
   }
 }
-
-/// A container hold the [homeButton], [teamButton] and [calendarButton].
-Widget buttonHolder() {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.deepPurpleAccent,
-      borderRadius: const BorderRadius.all(
-        Radius.circular(50),
-      ),
-      border: Border.all(
-        color: Colors.black,
-        width: 1.5,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.4),
-          blurRadius: 7,
-          spreadRadius: 5,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: ButtonBar(
-      alignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      buttonHeight: 8,
-      buttonPadding: const EdgeInsets.all(0.1),
-      children: [
-        navButton(const Icon(Icons.home)),
-        navButton(const Icon(Icons.group)),
-        navButton(const Icon(Icons.calendar_today)),
-      ],
-    ),
-  );
-}
-
-/// A button that navigates to the [HomeScreen].
-Widget navButton(Icon icon) => IconButton(
-      icon: icon,
-      color: const Color.fromARGB(255, 0, 255, 229),
-      onPressed: () {},
-    );
