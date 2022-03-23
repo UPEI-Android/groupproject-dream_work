@@ -1,9 +1,7 @@
-import { PrismaClient, todoItem } from '@prisma/client'
-
-export type item = todoItem;
+import { PrismaClient } from '@prisma/client'
 
 // a singleton instance of the database client
-export class DatabaseClient {
+export default class DatabaseClient {
     private static instance: DatabaseClient;
     private dbclient: PrismaClient;
     

@@ -1,24 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import generalHandler from '../../../lib/handler/handler';
+import type { user } from '@prisma/client'
 import jwt from 'jsonwebtoken'
-import { PrismaClient } from '@prisma/client'
+import generalHandler from '../../../lib/handler/handler';
+import DatabaseClient from '../../../lib/dbclient';
 
-interface User {
-    username: string,
-    email: string,
-    password: string,
-}
+const dbclient = DatabaseClient.getInstance().client;
 
-const prisma = new PrismaClient()
-
+// this is api is not protected by jwt token
 export default Object.create(generalHandler)
 
 .post(async (req : NextApiRequest, res : NextApiResponse) => {
     // Authenticate the user
-    const { username, email, password } : User = req.body
+    const { username, email, password } : user = req.body
     if(!((username || email) && password)) return res.status(400).json({ error: 'No username or password provided' })
 
-    let data:any = await prisma.user.findFirst({
+    let data:any = await dbclient.user.findFirst({
         where: {
             OR: [
                 {

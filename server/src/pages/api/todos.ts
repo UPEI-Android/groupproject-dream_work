@@ -1,19 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { DatabaseClient, item } from '../../lib/dbclient'
+import DatabaseClient from '../../lib/dbclient'
 import authenticateToken from '../../lib/middleware/authenticateToken';
 import generalHandler from '../../lib/handler/handler';
-import logger from '../../lib/middleware/logger';
 
-const dbclient = DatabaseClient.getInstance().client;
-interface ExtendedRequest {
+interface ExtendedRequest extends NextApiRequest {
     user: {
         name: string;
     }
 }
+
+const dbclient = DatabaseClient.getInstance().client;
             
 export default Object.create(generalHandler)
 
-.use(logger)
 .use(authenticateToken)
 
 // query all items by uid (user id)
