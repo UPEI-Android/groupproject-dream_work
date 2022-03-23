@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 
-interface ExtendedRequest extends NextApiRequest {
-    user: string
+export interface ExtendedRequest extends NextApiRequest {
+    user: {
+        name: string;
+    }
 }
 
 // a JWT authenticate middleware to verify the user

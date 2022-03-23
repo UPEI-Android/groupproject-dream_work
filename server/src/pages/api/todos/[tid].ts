@@ -1,14 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiResponse } from 'next'
 import type { todoItem } from '@prisma/client';
 import handler from '../../../lib/handler/handler';
-import authenticateToken from '../../../lib/middleware/authenticateToken';
+import authenticateToken, {ExtendedRequest} from '../../../lib/middleware/authenticateToken';
 import DatabaseClient from '../../../lib/dbclient'
 
-interface ExtendedRequest extends NextApiRequest {
-    user: {
-        name: string;
-    }
-}
 
 const dbclient = DatabaseClient.getInstance().client;
 
@@ -17,7 +12,7 @@ export default Object.create(handler)
 .use(authenticateToken)
 
 // query a todo item by its tid(todo item id)
-.get(async (req : NextApiRequest, res: NextApiResponse)=> {
+.get(async (req : ExtendedRequest, res: NextApiResponse)=> {
     const { tid } = req.query;
 
     let data:any = await dbclient.todoItem.findUnique({
@@ -25,30 +20,9 @@ export default Object.create(handler)
             tid: tid as string
         }
     })
-
+    console.log(data)
     if(data.count == 0) return res.status(400).json({ error: 'No todo item found' });
     res.status(200).json(data);
-})
-
-// create a todo item
-.post(async (req : ExtendedRequest, res: NextApiResponse)=> {
-    const { tid, section, isDone, due_at, content} = req.body;
-    const uid = req.user.name; // the user name in jwt token
-
-    let data = await dbclient.todoItem.create({
-        data: {
-            tid: tid,
-            members: uid,
-            section: section ? section : undefined,
-            isDone: isDone ? true : false,
-            updated_by: uid,
-            updated_at: undefined,
-            created_at: undefined, //defaut
-            due_at: due_at ? due_at : '',
-            content: content? content : '',
-        }
-    })
-    res.status(200).json({data});
 })
 
 // delete a todo item by its tid(todo item id)

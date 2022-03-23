@@ -13,4 +13,3 @@ export default nc<NextApiRequest, NextApiResponse>({
 })
 
 .use(logger)
-
