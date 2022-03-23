@@ -1,3 +1,4 @@
+import 'package:dream_work/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class TeamScreen extends StatelessWidget {
@@ -6,6 +7,6 @@ class TeamScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return TeamTag();
   }
 }

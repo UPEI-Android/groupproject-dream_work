@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
       initialRoute: HomeScreen.routeName,
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
-        TeamScreen.routeName: (context) => const TeamScreen(),
         HomeScreen.routeName: (context) => const HomeScreen(),
+        IndividualScreen.routeName: (context) => const IndividualScreen(),
       },
     );
   }

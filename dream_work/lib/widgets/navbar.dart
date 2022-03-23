@@ -8,17 +8,8 @@ class NavBar extends StatelessWidget {
   const NavBar({Key? key, required this.tabController}) : super(key: key);
   final TabController tabController;
 
-  /// A button that navigates to the [HomeScreen].
-  Widget navButton({required Icon icon, required int index}) => IconButton(
-        icon: icon,
-        color: const Color.fromARGB(255, 0, 255, 229),
-        onPressed: () {
-          tabController.animateTo(index);
-        },
-      );
-
   /// A container hold the [homeButton], [teamButton] and [calendarButton].
-  Widget buttonHolder() => Container(
+  Widget _buttonHolder() => Container(
         decoration: BoxDecoration(
           color: Colors.deepPurpleAccent,
           borderRadius: const BorderRadius.all(
@@ -43,22 +34,31 @@ class NavBar extends StatelessWidget {
           buttonHeight: 8,
           buttonPadding: const EdgeInsets.all(0.1),
           children: [
-            navButton(icon: const Icon(Icons.group), index: 1),
-            navButton(icon: const Icon(Icons.home), index: 0),
-            navButton(icon: const Icon(Icons.calendar_today), index: 2),
+            _navButton(icon: const Icon(Icons.group), index: 0),
+            _navButton(icon: const Icon(Icons.calendar_month), index: 1),
           ],
         ),
+      );
+
+  /// A button that navigates to the [HomeScreen].
+  Widget _navButton({required Icon icon, required int index}) => IconButton(
+        icon: icon,
+        iconSize: 29,
+        color: const Color.fromARGB(255, 0, 255, 229),
+        onPressed: () {
+          tabController.animateTo(index);
+        },
       );
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; // size of the screen
     return Positioned(
-      bottom: 0.03 * size.height,
+      bottom: 0.04 * size.height,
       child: SizedBox(
-        width: size.width / 2.5,
-        height: 57,
-        child: buttonHolder(),
+        width: 135,
+        height: 70,
+        child: _buttonHolder(),
       ),
     );
   }

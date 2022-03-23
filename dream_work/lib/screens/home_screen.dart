@@ -1,30 +1,22 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
-// class HomeScreen extends StatelessWidget {
-//   const HomeScreen({Key? key}) : super(key: key);
-
-//   static const routeName = '/home';
-
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size; // size of the screen
-//     return Scaffold(
-//       backgroundColor: Colors.deepPurple,
-//       body: SizedBox(
-//         height: size.height,
-//         width: double.infinity,
-//         child: Stack(
-//           alignment: Alignment.center,
-//           children: const [
-//             TodoList(),
-//             NavBar(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+enum Mounth {
+  January,
+  February,
+  March,
+  April,
+  May,
+  June,
+  July,
+  August,
+  September,
+  October,
+  November,
+  December
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -38,17 +30,16 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  static const _kTabPages = <Widget>[
-    TodoList(),
-    Center(child: Icon(Icons.alarm, size: 64.0, color: Colors.cyan)),
-    Center(child: Icon(Icons.forum, size: 64.0, color: Colors.blue)),
+  static const _tabPages = <Widget>[
+    TeamTag(),
+    Center(child: Icon(Icons.calendar_month, size: 64.0, color: Colors.blue)),
   ];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: _kTabPages.length,
+      length: _tabPages.length,
       vsync: this,
     );
   }
@@ -63,13 +54,14 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple,
+      appBar: _appbar(),
       body: SizedBox(
         child: Stack(
           alignment: Alignment.center,
           children: [
             TabBarView(
               controller: _tabController,
-              children: _kTabPages,
+              children: _tabPages,
             ),
             NavBar(tabController: _tabController),
           ],
@@ -78,3 +70,28 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 }
+
+PreferredSizeWidget _appbar() => AppBar(
+      title: Text(_date4today()),
+      backgroundColor: Colors.deepPurple,
+      elevation: 10,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            // todo add a real action for search
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            // todo add a real action for add
+          },
+        ),
+      ],
+    );
+
+String _date4today() =>
+    Mounth.values[DateTime.now().month - 1].toString().split('.').last +
+    " " +
+    DateTime.now().day.toString();

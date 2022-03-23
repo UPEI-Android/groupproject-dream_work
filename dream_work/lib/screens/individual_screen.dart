@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
-import 'widgets.dart';
+import '../widgets/widgets.dart';
+
+class IndividualScreen extends StatelessWidget {
+  const IndividualScreen({Key? key}) : super(key: key);
+
+  static const routeName = '/individual';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar(),
+      backgroundColor: Colors.deepPurple,
+      body: const TodoList(),
+    );
+  }
+}
+
+PreferredSizeWidget appBar() => AppBar(
+      backgroundColor: Colors.deepPurple,
+    );
 
 class TodoList extends StatelessWidget {
   const TodoList({Key? key}) : super(key: key);
