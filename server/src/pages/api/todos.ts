@@ -1,18 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
+import { DatabaseClient, item } from '../../lib/dbclient'
 import authenticateToken from '../../lib/middleware/authenticateToken';
 import generalHandler from '../../lib/handler/handler';
+import logger from '../../lib/middleware/logger';
 
-const prisma = new PrismaClient()
-
+const dbclient = DatabaseClient.getInstance().client;
+interface ExtendedRequest {
+    user: {
+        name: string;
+    }
+}
+            
 export default Object.create(generalHandler)
 
+.use(logger)
 .use(authenticateToken)
 
-// query all the todo item by uid (user id)
-.get(async (req : any, res: NextApiResponse)=> {
+// query all items by uid (user id)
+.get(async (req : ExtendedRequest, res: NextApiResponse)=> {
     const uid = req.user.name; // the user name in jwt token
-    const data = await prisma.todoItem.findMany({
+    const data = await dbclient.todoItem.findMany({
         where: {
             members: {
                 contains: uid
@@ -26,10 +33,9 @@ export default Object.create(generalHandler)
 
 // delete all todo items by uid (user id) and section
 // cation!!
-.delete(async (req : any, res: NextApiResponse)=> {
+.delete(async (req : ExtendedRequest, res: NextApiResponse)=> {
     const uid = req.user.name; // the user name in jwt token
-    const { section } = req.body;
-    const data = await prisma.todoItem.deleteMany({ 
+    const data = await dbclient.todoItem.deleteMany({ 
         where: { 
             members: {
                 contains: uid
@@ -44,7 +50,7 @@ export default Object.create(generalHandler)
 .put(async (req : any, res: NextApiResponse)=> {
     const uid = req.user.name; // the user name in jwt token
     const { member, section } = req.body; // new member
-    let data:any = await prisma.todoItem.updateMany({
+    let data = await dbclient.todoItem.updateMany({
         data:{
             members: member
         },
