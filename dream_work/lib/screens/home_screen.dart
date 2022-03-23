@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; // size of the screen
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 210, 204, 204),
+      backgroundColor: Colors.deepPurple,
       body: SizedBox(
         height: size.height,
         width: double.infinity,

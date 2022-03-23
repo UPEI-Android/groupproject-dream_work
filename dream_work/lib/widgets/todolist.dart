@@ -9,7 +9,7 @@ class TodoList extends StatelessWidget {
     return ListView(
       children: [
         // demo
-        for (int i = 0; i < 20; i++) TodoTag(),
+        for (int i = 0; i < 20; i++) const TodoTag(),
       ],
     );
   }

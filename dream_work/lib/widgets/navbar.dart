@@ -22,7 +22,7 @@ class NavBar extends StatelessWidget {
 Widget buttonHolder() {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: Colors.deepPurpleAccent,
       borderRadius: const BorderRadius.all(
         Radius.circular(50),
       ),
@@ -30,6 +30,14 @@ Widget buttonHolder() {
         color: Colors.black,
         width: 1.5,
       ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.4),
+          blurRadius: 7,
+          spreadRadius: 5,
+          offset: const Offset(0, 4),
+        ),
+      ],
     ),
     child: ButtonBar(
       alignment: MainAxisAlignment.center,
@@ -48,5 +56,6 @@ Widget buttonHolder() {
 /// A button that navigates to the [HomeScreen].
 Widget navButton(Icon icon) => IconButton(
       icon: icon,
+      color: const Color.fromARGB(255, 0, 255, 229),
       onPressed: () {},
     );
