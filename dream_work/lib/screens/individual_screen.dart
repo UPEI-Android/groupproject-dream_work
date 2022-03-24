@@ -10,15 +10,12 @@ class IndividualScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      backgroundColor: Colors.deepPurple,
       body: const TodoList(),
     );
   }
 }
 
-PreferredSizeWidget appBar() => AppBar(
-      backgroundColor: Colors.deepPurple,
-    );
+PreferredSizeWidget appBar() => AppBar();
 
 class TodoList extends StatelessWidget {
   const TodoList({Key? key}) : super(key: key);

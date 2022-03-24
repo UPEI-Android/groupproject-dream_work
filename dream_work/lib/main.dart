@@ -15,8 +15,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Dream Work',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
+        primarySwatch: Colors.deepPurple,
+        scaffoldBackgroundColor: Colors.deepPurple,
+        fontFamily: 'Nunito',
       ),
       initialRoute: HomeScreen.routeName,
       routes: {

@@ -53,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: _appbar(),
       body: SizedBox(
         child: Stack(
@@ -73,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen>
 
 PreferredSizeWidget _appbar() => AppBar(
       title: Text(_date4today()),
-      backgroundColor: Colors.deepPurple,
       elevation: 10,
       actions: [
         IconButton(
