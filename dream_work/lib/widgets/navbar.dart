@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/screens.dart';
+import '../domain/domain.dart';
 
 ///----------------------------------------------------------------------------
 /// A custom navigation bar
@@ -31,7 +32,7 @@ Widget _buttonHolder({required TabController tabController}) => Container(
         ),
         border: Border.all(
           color: Colors.black,
-          width: 1.5,
+          width: 0.3,
         ),
         boxShadow: [
           BoxShadow(
@@ -74,5 +75,8 @@ Widget _navButton({
       color: const Color.fromARGB(255, 0, 255, 229),
       onPressed: () {
         tabController.animateTo(index);
+
+        IndividualFetcher().fetchAll();
+        IndividualFetcher().fetchById(tid: 'test1');
       },
     );
