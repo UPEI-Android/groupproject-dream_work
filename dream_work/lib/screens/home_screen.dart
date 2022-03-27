@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   static const _tabPages = <Widget>[
     TeamTag(),
-    Center(child: Icon(Icons.calendar_month, size: 64.0, color: Colors.blue)),
+    Center(child: Icon(Icons.calendar_month, size: 64.0, color: Colors.green)),
   ];
 
   @override
@@ -71,8 +71,8 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 PreferredSizeWidget _appbar() => AppBar(
-      title: Text(_date4today()),
-      elevation: 10,
+      title: Text(_date4today(), style: const TextStyle(fontSize: 25)),
+      elevation: 12,
       actions: [
         IconButton(
           icon: const Icon(Icons.search),
@@ -82,6 +82,7 @@ PreferredSizeWidget _appbar() => AppBar(
         ),
         IconButton(
           icon: const Icon(Icons.add),
+          color: Colors.yellow,
           onPressed: () {
             // todo add a real action for add
           },

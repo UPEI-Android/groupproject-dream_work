@@ -21,7 +21,7 @@ class Tag extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: Colors.deepPurpleAccent,
+        color: const Color.fromARGB(255, 16, 28, 65),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.4),

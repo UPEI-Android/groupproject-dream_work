@@ -26,7 +26,7 @@ class NavBar extends StatelessWidget {
 /// A container hold the [homeButton], [teamButton] and [calendarButton].
 Widget _buttonHolder({required TabController tabController}) => Container(
       decoration: BoxDecoration(
-        color: Colors.deepPurpleAccent,
+        color: const Color.fromARGB(255, 15, 26, 60),
         borderRadius: const BorderRadius.all(
           Radius.circular(50),
         ),
@@ -72,11 +72,8 @@ Widget _navButton({
     IconButton(
       icon: icon,
       iconSize: 29,
-      color: const Color.fromARGB(255, 0, 255, 229),
+      color: Colors.green,
       onPressed: () {
         tabController.animateTo(index);
-
-        IndividualFetcher().fetchAll();
-        IndividualFetcher().fetchById(tid: 'test1');
       },
     );
