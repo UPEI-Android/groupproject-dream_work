@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'screens/screens.dart';
-import '../dream_connector/dreamConnector.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,9 +19,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: colorCustom,
         fontFamily: 'Nunito',
       ),
-      initialRoute: HomeScreen.routeName,
+      initialRoute: AuthScreen.routeName,
       routes: {
-        WelcomeScreen.routeName: (context) => const WelcomeScreen(),
+        AuthScreen.routeName: (context) => const AuthScreen(),
         HomeScreen.routeName: (context) => const HomeScreen(),
         IndividualScreen.routeName: (context) => const IndividualScreen(),
       },

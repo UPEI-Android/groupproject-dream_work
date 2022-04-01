@@ -1,9 +1,89 @@
+import 'package:dream_work/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import '../dream_connector/dreamConnector.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class AuthScreen extends StatelessWidget {
+  const AuthScreen({Key? key}) : super(key: key);
   static const routeName = '/welcome';
-  const WelcomeScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _serverUrlController = TextEditingController();
+    final _serverPortController = TextEditingController();
+    final _serverProtocolController = TextEditingController();
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FloatingActionButton(
+            child: const Text('Log In'),
+            onPressed: () {
+              Alert(
+                  context: context,
+                  title: "Log In",
+                  content: Column(
+                    children: <Widget>[
+                      TextField(
+                        controller: _serverUrlController,
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.computer),
+                          labelText: 'Server Address',
+                        ),
+                      ),
+                      TextField(
+                        controller: _serverPortController,
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.portrait),
+                          labelText: 'Port',
+                        ),
+                      ),
+                      TextField(
+                        controller: _serverProtocolController,
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.lock),
+                          labelText: 'Protocol',
+                        ),
+                      ),
+                    ],
+                  ),
+                  buttons: [
+                    DialogButton(
+                      onPressed: () {
+                        DreamCore dreamCore = DreamCore(
+                          ServerUrl: _serverUrlController.text,
+                          ServerPort: int.parse(_serverPortController.text),
+                          ServerProtocol: _serverProtocolController.text,
+                        );
+                        DreamAuth.instance.dreamCore = dreamCore;
+                        Navigator.pushNamed(
+                          context,
+                          HomeScreen.routeName,
+                        );
+                      },
+                      child: const Text(
+                        "Join",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
+                    DialogButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
+                  ]).show();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WelcomeScreenBody extends StatelessWidget {
+  const WelcomeScreenBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +103,11 @@ class WelcomeScreen extends StatelessWidget {
               child: ButtonBar(
                 alignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    child: const Text("START"),
-                    style: const ButtonStyle(),
-                    onPressed: () {},
-                  ),
+                  FloatingActionButton(
+                      child: const Text("START"), onPressed: () => {}
+                      //Navigator.pushNamed(
+                      // context, RouteGenerator.individual_screen),
+                      ),
                 ],
               ),
             ),

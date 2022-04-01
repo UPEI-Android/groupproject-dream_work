@@ -121,12 +121,6 @@ class _ProfileTabState extends State<ProfileTab> {
                     final String email = _email.text;
                     final String password = _password.text;
 
-                    // todo replace those demo
-                    DreamCore dreamCore = DreamCore(
-                        ServerUrl: "localhost",
-                        ServerPort: 3000,
-                        ServerProtocol: "http");
-                    DreamAuth.instance.dreamCore = dreamCore;
                     await DreamAuth.instance
                         .loginWithEmailAndPassword(
                             email: email, password: password)

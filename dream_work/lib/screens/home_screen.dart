@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
-enum Mounth {
+enum Month {
   January,
   February,
   March,
@@ -72,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 PreferredSizeWidget _appbar(BuildContext context) => AppBar(
+      automaticallyImplyLeading: false,
       title: Padding(
         padding: const EdgeInsets.only(left: 9.0),
         child: Text(
@@ -98,6 +99,6 @@ PreferredSizeWidget _appbar(BuildContext context) => AppBar(
     );
 
 String _date4today() =>
-    Mounth.values[DateTime.now().month - 1].toString().split('.').last +
+    Month.values[DateTime.now().month - 1].toString().split('.').last +
     " " +
     DateTime.now().day.toString();
