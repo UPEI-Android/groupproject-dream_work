@@ -67,32 +67,6 @@ class _HomeScreenState extends State<HomeScreen>
           ],
         ),
       ),
-      // drawer: Drawer(
-      //   backgroundColor: Theme.of(context).primaryColor,
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       const Padding(
-      //         padding: const EdgeInsets.only(left: 10.0),
-      //         child: UserAccountsDrawerHeader(
-      //           accountName: Text('Guest', style: TextStyle(fontSize: 25.0)),
-      //           accountEmail:
-      //               Text('guest@dream.local', style: TextStyle(fontSize: 15.0)),
-      //           currentAccountPicture: CircleAvatar(
-      //             backgroundColor: Colors.amber,
-      //             child: Text('G', style: TextStyle(fontSize: 40.0)),
-      //           ),
-      //         ),
-      //       ),
-      //       Padding(
-      //         padding: const EdgeInsets.only(bottom: 300),
-      //         child: ElevatedButton(
-      //             onPressed: () {},
-      //             child: const Text('login', style: TextStyle(fontSize: 30.0))),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }
