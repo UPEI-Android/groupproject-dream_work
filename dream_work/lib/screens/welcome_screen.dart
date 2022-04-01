@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../dream_connector/dreamConnector.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const routeName = '/welcome';

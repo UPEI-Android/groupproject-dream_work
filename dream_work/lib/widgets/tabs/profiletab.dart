@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../dream_connector/dreamConnector.dart';
+import '../widgets.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({Key? key}) : super(key: key);
@@ -8,37 +10,25 @@ class ProfileTab extends StatefulWidget {
 }
 
 class _ProfileTabState extends State<ProfileTab> {
+  late final TextEditingController _email;
+  late final TextEditingController _password;
+
   double _height = 80;
   bool _isExpanded = false;
 
-  Widget _profile([bool isLogin = false]) => isLogin
-      ? const UserAccountsDrawerHeader(
-          accountName: Text('Guest', style: TextStyle(fontSize: 25.0)),
-          accountEmail:
-              Text('guest@dream.local', style: TextStyle(fontSize: 15.0)),
-          currentAccountPicture: CircleAvatar(
-            backgroundColor: Colors.amber,
-            child: Text('G', style: TextStyle(fontSize: 40.0)),
-          ),
-        )
-      : _isExpanded
-          ? _loginForm()
-          : ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.amber,
-                padding: const EdgeInsets.all(20),
-              ),
-              onPressed: () async {
-                setState(() {
-                  _height = 300;
-                });
-                await Future.delayed(const Duration(milliseconds: 200), () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                });
-              },
-              child: const Text('Login', style: TextStyle(fontSize: 30.0)));
+  @override
+  void initState() {
+    super.initState();
+    _email = TextEditingController();
+    _password = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +38,13 @@ class _ProfileTabState extends State<ProfileTab> {
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           height: _height,
-          child: _profile(),
-          color: Colors.amber,
+          child: DreamAuth.instance.isSignin()
+              ? Profile(
+                  userEmail: DreamAuth.instance.authState()!['email'],
+                  userName: DreamAuth.instance.authState()!['name'],
+                )
+              : _authTag(),
+          //color: Colors.amber,
         ),
         _divider(),
         Container(
@@ -65,41 +60,85 @@ class _ProfileTabState extends State<ProfileTab> {
       ],
     );
   }
-}
 
-Widget _loginForm() => Form(
-      child: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Username / Email',
-                labelStyle: TextStyle(fontSize: 20),
-              ),
+  Widget _authTag() => _isExpanded
+      ? _loginForm()
+      : ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.amber,
+            padding: const EdgeInsets.all(20),
+          ),
+          onPressed: () async {
+            setState(() {
+              _height = 300;
+            });
+            await Future.delayed(const Duration(milliseconds: 200), () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            });
+          },
+          child: const Text('Login', style: TextStyle(fontSize: 30.0)));
+
+  Widget _loginForm() => Form(
+        child: Container(
+          color: Colors.amber,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextFormField(
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Username / Email',
+                    labelStyle: TextStyle(fontSize: 20),
+                  ),
+                ),
+                TextFormField(
+                  controller: _password,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                    labelStyle: TextStyle(fontSize: 20),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final String email = _email.text;
+                    final String password = _password.text;
+
+                    // todo replace those demo
+                    DreamCore dreamCore = DreamCore(
+                        ServerUrl: "localhost",
+                        ServerPort: 3000,
+                        ServerProtocol: "http");
+                    DreamAuth.instance.dreamCore = dreamCore;
+                    await DreamAuth.instance
+                        .loginWithEmailAndPassword(
+                            email: email, password: password)
+                        .catchError((e) {
+                      print(e);
+                    });
+
+                    setState(() {
+                      _height = 180;
+                    });
+                  },
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(fontSize: 30.0),
+                  ),
+                ),
+              ],
             ),
-            TextFormField(
-              keyboardType: TextInputType.visiblePassword,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-                labelStyle: TextStyle(fontSize: 20),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text(
-                'Login',
-                style: TextStyle(fontSize: 30.0),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
+      );
+}
 
 Widget _divider() => const Divider(
       height: 30,

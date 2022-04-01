@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/screens.dart';
-import '../domain/domain.dart';
+import '../dream_connector/dreamConnector.dart';
 
 ///----------------------------------------------------------------------------
 /// A custom navigation bar
