@@ -13,7 +13,7 @@ export default Object.create(generalHandler)
     // Authenticate the user
     const { username, email, password } : user = req.body
     if(!((username || email) && password)) return res.status(400).json({ error: 'No username or password provided' })
-
+    
     let data:any = await dbclient.user.findFirst({
         where: {
             OR: [
