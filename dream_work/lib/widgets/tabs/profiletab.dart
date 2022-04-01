@@ -15,6 +15,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
   double _height = 80;
   bool _isExpanded = false;
+  bool _error = false;
 
   @override
   void initState() {
@@ -38,13 +39,18 @@ class _ProfileTabState extends State<ProfileTab> {
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           height: _height,
-          child: DreamAuth.instance.isSignin()
-              ? Profile(
-                  userEmail: DreamAuth.instance.authState()!['email'],
-                  userName: DreamAuth.instance.authState()!['name'],
-                )
-              : _authTag(),
-          //color: Colors.amber,
+          child: StreamBuilder(
+            stream: DreamAuth.instance.authStateStream,
+            builder: (BuildContext context, AsyncSnapshot snap) {
+              return snap.data == null
+                  ? _authTag()
+                  : Profile(
+                      userEmail: snap.data['email'],
+                      userName: snap.data['name'],
+                      showLogout: true,
+                    );
+            },
+          ),
         ),
         _divider(),
         Container(
@@ -86,8 +92,12 @@ class _ProfileTabState extends State<ProfileTab> {
           child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                _error
+                    ? const Text('Wrong Username or Password',
+                        style: TextStyle(color: Colors.red))
+                    : const Text(''),
                 TextFormField(
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
@@ -121,12 +131,17 @@ class _ProfileTabState extends State<ProfileTab> {
                         .loginWithEmailAndPassword(
                             email: email, password: password)
                         .catchError((e) {
-                      print(e);
+                      setState(() {
+                        _error = true;
+                      });
                     });
 
-                    setState(() {
-                      _height = 180;
-                    });
+                    if (!_error) {
+                      setState(() {
+                        _height = 100;
+                        _isExpanded = false;
+                      });
+                    }
                   },
                   child: const Text(
                     'Login',

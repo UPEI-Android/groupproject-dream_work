@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dream_work/dream_connector/dreamCore.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 
 enum Path {
   register,
@@ -38,7 +39,7 @@ class DreamAuth {
 
   // auth infomation
   String? _authToken;
-  Map<String, dynamic>? _payload;
+  //Map<String, dynamic>? _payload;
 
   DreamAuth._internal(); // private constructor
 
@@ -46,18 +47,21 @@ class DreamAuth {
     this._dreamCore = _dreamCore;
   }
 
+  final BehaviorSubject _authStateStream =
+      BehaviorSubject<Map<String, dynamic>?>.seeded(null);
+
   /// Return the user information in the authtoken
   /// - username
   /// - name
   /// - email
   /// - iat
-  Map<String, dynamic>? authState() {
-    return _payload;
-  }
+  get authStateStream => _authStateStream;
 
-  /// Return true if the user is login
-  bool isSignin() {
-    return _payload == null ? false : true;
+  /// Attmpts to logout
+  Future logout() async {
+    _authToken = null;
+    Map<String, dynamic>? empty;
+    _authStateStream.add(empty);
   }
 
   /// Attempts to register a user with the given email address password and optional username.
@@ -102,7 +106,7 @@ class DreamAuth {
     });
 
     _authToken = await _post(path: Path.login, headers: headers, body: body);
-    _payload = Jwt.parseJwt(_authToken!);
+    _authStateStream.add(Jwt.parseJwt(_authToken!));
   }
 
   /// Attempts to sent post request to server.
