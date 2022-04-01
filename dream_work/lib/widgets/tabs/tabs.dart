@@ -1,2 +1,3 @@
 export 'teamtab.dart';
-export 'authtab.dart';
+export 'calendertab.dart';
+export 'profiletab.dart';

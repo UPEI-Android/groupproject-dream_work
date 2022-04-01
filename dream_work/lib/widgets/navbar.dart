@@ -6,16 +6,21 @@ import '../dream_connector/dreamConnector.dart';
 /// A custom navigation bar
 ///----------------------------------------------------------------------------
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key, required this.tabController}) : super(key: key);
+  const NavBar({
+    Key? key,
+    required this.tabController,
+    this.prop,
+  }) : super(key: key);
   final TabController tabController;
+  final prop; // todo
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; // size of the screen
     return Positioned(
-      bottom: 0.04 * size.height,
+      bottom: 0.05 * size.height,
       child: SizedBox(
-        width: 135,
+        width: 160,
         height: 70,
         child: _buttonHolder(tabController: tabController),
       ),
@@ -59,6 +64,10 @@ Widget _buttonHolder({required TabController tabController}) => Container(
             index: 1,
             tabController: tabController,
           ),
+          _navButton(
+              icon: const Icon(Icons.home),
+              index: 2,
+              tabController: tabController),
         ],
       ),
     );

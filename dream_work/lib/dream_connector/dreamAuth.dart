@@ -37,8 +37,8 @@ class DreamAuth {
   late DreamCore _dreamCore;
 
   // auth infomation
-  late String _authToken;
-  late Map<String, dynamic> _payload;
+  String? _authToken;
+  Map<String, dynamic>? _payload;
 
   DreamAuth._internal(); // private constructor
 
@@ -53,6 +53,11 @@ class DreamAuth {
   /// - iat
   Map<String, dynamic>? authState() {
     return _payload;
+  }
+
+  /// Return true if the user is login
+  bool isSignin() {
+    return _payload == null ? false : true;
   }
 
   /// Attempts to register a user with the given email address password and optional username.
@@ -97,7 +102,7 @@ class DreamAuth {
     });
 
     _authToken = await _post(path: Path.login, headers: headers, body: body);
-    _payload = Jwt.parseJwt(_authToken);
+    _payload = Jwt.parseJwt(_authToken!);
   }
 
   /// Attempts to sent post request to server.
