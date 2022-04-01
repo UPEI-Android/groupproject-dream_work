@@ -4,8 +4,6 @@ import '../widgets/widgets.dart';
 class IndividualScreen extends StatelessWidget {
   const IndividualScreen({Key? key}) : super(key: key);
 
-  static const routeName = '/individual';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

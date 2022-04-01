@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 
-enum Mounth {
+enum Month {
   January,
   February,
   March,
@@ -20,7 +20,6 @@ enum Mounth {
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-  static const routeName = '/home';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -91,6 +90,6 @@ PreferredSizeWidget _appbar() => AppBar(
     );
 
 String _date4today() =>
-    Mounth.values[DateTime.now().month - 1].toString().split('.').last +
+    Month.values[DateTime.now().month - 1].toString().split('.').last +
     " " +
     DateTime.now().day.toString();

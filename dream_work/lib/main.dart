@@ -1,3 +1,4 @@
+import 'package:dream_work/routes/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'screens/screens.dart';
 
@@ -19,12 +20,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: colorCustom,
         fontFamily: 'Nunito',
       ),
-      initialRoute: HomeScreen.routeName,
-      routes: {
-        AuthScreen.routeName: (context) => const AuthScreen(),
-        HomeScreen.routeName: (context) => const HomeScreen(),
-        IndividualScreen.routeName: (context) => const IndividualScreen(),
-      },
+      initialRoute: RouteGenerator.auth_screen,
     );
   }
 }
