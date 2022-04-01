@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
 
-class AuthScreen extends StatelessWidget {
-  const AuthScreen({Key? key}) : super(key: key);
-
+class WelcomeScreen extends StatelessWidget {
   static const routeName = '/welcome';
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: WelcomeScreenBody(),
-    );
-  }
-}
-
-class WelcomeScreenBody extends StatelessWidget {
-  const WelcomeScreenBody({Key? key}) : super(key: key);
+  const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

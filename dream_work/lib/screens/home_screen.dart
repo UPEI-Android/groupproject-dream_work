@@ -31,8 +31,9 @@ class _HomeScreenState extends State<HomeScreen>
   late TabController _tabController;
 
   static const _tabPages = <Widget>[
-    TeamTag(),
-    Center(child: Icon(Icons.calendar_month, size: 64.0, color: Colors.green)),
+    TeamTab(),
+    CalenderTab(),
+    ProfileTab(),
   ];
 
   @override
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
+      appBar: _appbar(context),
       body: SizedBox(
         child: Stack(
           alignment: Alignment.center,
@@ -66,12 +67,44 @@ class _HomeScreenState extends State<HomeScreen>
           ],
         ),
       ),
+      // drawer: Drawer(
+      //   backgroundColor: Theme.of(context).primaryColor,
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       const Padding(
+      //         padding: const EdgeInsets.only(left: 10.0),
+      //         child: UserAccountsDrawerHeader(
+      //           accountName: Text('Guest', style: TextStyle(fontSize: 25.0)),
+      //           accountEmail:
+      //               Text('guest@dream.local', style: TextStyle(fontSize: 15.0)),
+      //           currentAccountPicture: CircleAvatar(
+      //             backgroundColor: Colors.amber,
+      //             child: Text('G', style: TextStyle(fontSize: 40.0)),
+      //           ),
+      //         ),
+      //       ),
+      //       Padding(
+      //         padding: const EdgeInsets.only(bottom: 300),
+      //         child: ElevatedButton(
+      //             onPressed: () {},
+      //             child: const Text('login', style: TextStyle(fontSize: 30.0))),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
 
-PreferredSizeWidget _appbar() => AppBar(
-      title: Text(_date4today(), style: const TextStyle(fontSize: 25)),
+PreferredSizeWidget _appbar(BuildContext context) => AppBar(
+      title: Padding(
+        padding: const EdgeInsets.only(left: 9.0),
+        child: Text(
+          _date4today(),
+          style: const TextStyle(fontSize: 25),
+        ),
+      ),
       elevation: 12,
       actions: [
         IconButton(
