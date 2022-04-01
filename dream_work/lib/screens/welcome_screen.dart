@@ -1,19 +1,21 @@
-import 'package:dream_work/routes/route_generator.dart';
+import 'package:dream_work/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import '../dream_connector/dreamConnector.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
+  static const routeName = '/welcome';
 
   @override
   Widget build(BuildContext context) {
-    final usernameController = TextEditingController();
-    final passwordController = TextEditingController();
-    final repasswordController = TextEditingController();
+    final _serverUrlController = TextEditingController();
+    final _serverPortController = TextEditingController();
+    final _serverProtocolController = TextEditingController();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget> [
+        children: <Widget>[
           FloatingActionButton(
             child: const Text('Log In'),
             onPressed: () {
@@ -21,113 +23,46 @@ class AuthScreen extends StatelessWidget {
                   context: context,
                   title: "Log In",
                   content: Column(
-                    children:  <Widget>[
+                    children: <Widget>[
                       TextField(
-                        controller: usernameController,
+                        controller: _serverUrlController,
                         decoration: const InputDecoration(
-                          icon: Icon(Icons.account_circle),
-                          labelText: 'Username',
+                          icon: Icon(Icons.computer),
+                          labelText: 'Server Address',
                         ),
                       ),
                       TextField(
-                        controller: passwordController,
-                        obscureText: true,
-                        obscuringCharacter: "*",
+                        controller: _serverPortController,
                         decoration: const InputDecoration(
-                          icon: Icon(Icons.lock),
-                          labelText: 'password',
-                        ),
-                      )
-                    ],
-                  ),
-                  buttons: [
-                    DialogButton(
-                      onPressed: () {}, //ToDo: log in to database and see if it is there, then send them to welcome
-                      child: const Text(
-                        "Log In",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                    ),
-                    DialogButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                    ),
-                  ]).show();
-            },
-          ),
-          FloatingActionButton(
-            child: const Text('Sign Up'),
-            onPressed: () {
-              Alert(
-                  context: context,
-                  title: "Sign Up",
-                  content: Column(
-                    children:  <Widget>[
-                      TextField(
-                        controller: usernameController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.account_circle),
-                          labelText: 'Username',
+                          icon: Icon(Icons.portrait),
+                          labelText: 'Port',
                         ),
                       ),
                       TextField(
-                        controller: passwordController,
-                        obscureText: true,
-                        obscuringCharacter: "*",
+                        controller: _serverProtocolController,
                         decoration: const InputDecoration(
                           icon: Icon(Icons.lock),
-                          labelText: 'Password',
+                          labelText: 'Protocol',
                         ),
                       ),
-                      TextField(
-                        controller: repasswordController,
-                        obscureText: true,
-                        obscuringCharacter: "*",
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.lock),
-                          labelText: 'Confirm Password',
-                        ),
-                      )
                     ],
                   ),
                   buttons: [
                     DialogButton(
                       onPressed: () {
-                        if(passwordController.text.compareTo(repasswordController.text)==0){
-                          if (passwordController.text.length < 6) {
-                            Alert(
-                                context: context,
-                                title: "Password Too Short",
-                                desc: "the password must be at least 6 characters"
-                            );
-                          }
-                          else if (usernameController.text.isEmpty ||
-                              passwordController.text.isEmpty ||
-                              repasswordController.text.isEmpty) {
-                            Alert(
-                                context: context,
-                                title: "Incorrect Requirements",
-                                desc: "One ore More fields empty"
-                            );
-                          }
-                          else{
-                            //ToDo: sign the person up
-                            //then send them to welcome screen
-                          }
-                        }
-                        else{
-                          Alert(
-                              context: context,
-                              title: "Passwords not matching",
-                              desc: "the passwords don't match"
-                          );
-                        }
+                        DreamCore dreamCore = DreamCore(
+                          ServerUrl: _serverUrlController.text,
+                          ServerPort: int.parse(_serverPortController.text),
+                          ServerProtocol: _serverProtocolController.text,
+                        );
+                        DreamAuth.instance.dreamCore = dreamCore;
+                        Navigator.pushNamed(
+                          context,
+                          HomeScreen.routeName,
+                        );
                       },
                       child: const Text(
-                        "Sign Up",
+                        "Join",
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
@@ -169,9 +104,10 @@ class WelcomeScreenBody extends StatelessWidget {
                 alignment: MainAxisAlignment.center,
                 children: [
                   FloatingActionButton(
-                    child: const Text("START"),
-                    onPressed: ()=>Navigator.pushNamed(context, RouteGenerator.individual_screen),
-                  ),
+                      child: const Text("START"), onPressed: () => {}
+                      //Navigator.pushNamed(
+                      // context, RouteGenerator.individual_screen),
+                      ),
                 ],
               ),
             ),
@@ -181,7 +117,6 @@ class WelcomeScreenBody extends StatelessWidget {
     );
   }
 }
-
 
 class WelcomeScreenBackground extends StatelessWidget {
   const WelcomeScreenBackground({Key? key}) : super(key: key);
