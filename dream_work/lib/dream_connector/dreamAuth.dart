@@ -47,7 +47,7 @@ class DreamAuth {
     this._dreamCore = _dreamCore;
   }
 
-  final BehaviorSubject _authState =
+  final BehaviorSubject _authStateStream =
       BehaviorSubject<Map<String, dynamic>?>.seeded(null);
 
   /// Return the user information in the authtoken
@@ -55,13 +55,13 @@ class DreamAuth {
   /// - name
   /// - email
   /// - iat
-  get authState => _authState;
+  get authStateStream => _authStateStream;
 
   /// Attmpts to logout
   Future logout() async {
     _authToken = null;
     Map<String, dynamic>? empty;
-    _authState.add(empty);
+    _authStateStream.add(empty);
   }
 
   /// Attempts to register a user with the given email address password and optional username.
@@ -106,7 +106,7 @@ class DreamAuth {
     });
 
     _authToken = await _post(path: Path.login, headers: headers, body: body);
-    _authState.add(Jwt.parseJwt(_authToken!));
+    _authStateStream.add(Jwt.parseJwt(_authToken!));
   }
 
   /// Attempts to sent post request to server.
