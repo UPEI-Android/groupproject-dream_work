@@ -1,13 +1,19 @@
-import type { NextApiResponse } from 'next'
+import type { NextApiResponse, NextApiRequest } from 'next'
 import type { todoItem } from '@prisma/client';
-import handler from '../../../lib/handler/handler';
 import authenticateToken, {ExtendedRequest} from '../../../lib/middleware/authenticateToken';
 import DatabaseClient from '../../../lib/dbclient'
-
+import nc from 'next-connect'
 
 const dbclient = DatabaseClient.getInstance().client;
 
-export default Object.create(handler)
+export default nc<NextApiRequest, NextApiResponse>({
+    onError(error, req, res) {
+        res.status(500).json({ error: `Sorry something Happened! ${error.message}` });
+    },
+    onNoMatch(req, res) {
+        res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+    },
+})
 
 .use(authenticateToken)
 

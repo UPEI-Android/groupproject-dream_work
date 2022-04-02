@@ -15,7 +15,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
   double _height = 80;
   bool _isExpanded = false;
-  String _errorMsg = '';
+  String _error = '';
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _ProfileTabState extends State<ProfileTab> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(_errorMsg,
+                Text(_error,
                     style: const TextStyle(
                         color: Colors.red, fontWeight: FontWeight.bold)),
                 TextFormField(
@@ -116,7 +116,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     labelStyle: TextStyle(fontSize: 20),
                   ),
                 ),
-                _errorMsg == 'No such user' ? _registerBtn() : _signinBtn(),
+                _error == 'No such user' ? _registerBtn() : _signinBtn(),
               ],
             ),
           ),
@@ -129,18 +129,21 @@ class _ProfileTabState extends State<ProfileTab> {
           final String password = _password.text;
           await DreamAuth.instance
               .loginWithEmailAndPassword(email: email, password: password)
-              .then((value) => {
-                    setState(() {
-                      _height = 100;
-                      _isExpanded = false;
-                      _errorMsg = '';
-                    })
-                  })
-              .catchError((e) {
+              .then((value) {
             setState(() {
-              _errorMsg = e.toString().split(': ').last;
+              _height = 100;
+              _isExpanded = false;
+              _error = '';
             });
-          });
+          }).catchError(
+            (e) {
+              setState(
+                () {
+                  _error = e.toString().split(': ').last;
+                },
+              );
+            },
+          );
         },
         child: const Text(
           'Login',
@@ -154,16 +157,15 @@ class _ProfileTabState extends State<ProfileTab> {
           final String password = _password.text;
           await DreamAuth.instance
               .createUserWithEmailAndPassword(email: email, password: password)
-              .then((value) => {
-                    setState(() {
-                      _height = 100;
-                      _isExpanded = false;
-                      _errorMsg = '';
-                    })
-                  })
-              .catchError((e) {
+              .then((value) {
             setState(() {
-              _errorMsg = e.toString().split(': ').last;
+              _height = 100;
+              _isExpanded = false;
+              _error = '';
+            });
+          }).catchError((e) {
+            setState(() {
+              _error = e.toString().split(': ').last;
             });
           });
         },
