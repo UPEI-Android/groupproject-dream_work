@@ -1,13 +1,20 @@
-import type { NextApiResponse } from 'next'
+import type { NextApiResponse, NextApiRequest } from 'next'
 import type { todoItem } from '@prisma/client';
 import DatabaseClient from '../../lib/dbclient'
 import authenticateToken, {ExtendedRequest} from '../../lib/middleware/authenticateToken';
 import generalHandler from '../../lib/handler/handler';
+import nc from 'next-connect'
 
 const dbclient = DatabaseClient.getInstance().client;
             
-export default Object.create(generalHandler)
-
+export default nc<NextApiRequest, NextApiResponse>({
+    onError(error, req, res) {
+        res.status(500).json({ error: `Sorry something Happened! ${error.message}` });
+    },
+    onNoMatch(req, res) {
+        res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+    },
+})
 .use(authenticateToken)
 
 // query all items by uid (user id)

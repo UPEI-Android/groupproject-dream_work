@@ -63,7 +63,7 @@ class DreamAuth {
       'password': password,
     });
 
-    _post(path: Path.register, headers: headers, body: body);
+    await _post(path: Path.register, headers: headers, body: body);
     await loginWithEmailAndPassword(email: email, password: password);
   }
 
@@ -112,7 +112,11 @@ class DreamAuth {
         break;
     }
 
-    final Uri serverUrl = await _dreamCore.coreState();
+    final baseUrl = await _dreamCore.coreState();
+
+    print(body);
+
+    final Uri serverUrl = Uri.parse(baseUrl.toString() + _path);
     final http.Client client = http.Client();
     final response = await client.post(serverUrl, headers: headers, body: body);
 

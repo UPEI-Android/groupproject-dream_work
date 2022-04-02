@@ -12,6 +12,9 @@ class DreamCore {
     required this.serverProtocol,
   });
 
+  /// check if server is available
+  /// return server url if server is available
+  /// throw exception if server is not available
   Future<Uri> coreState() async {
     Uri uri = Uri.parse('$serverProtocol://$serverUrl:$serverPort');
     http.Client client = http.Client();
