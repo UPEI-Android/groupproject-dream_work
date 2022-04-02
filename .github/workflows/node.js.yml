@@ -24,6 +24,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       -
         name: Build and push image
+        working-directory: ./server
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
