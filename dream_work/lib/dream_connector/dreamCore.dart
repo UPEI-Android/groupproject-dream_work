@@ -1,15 +1,30 @@
+import 'package:http/http.dart' as http;
+
 /// sotre basic information and setting about server
 class DreamCore {
-  final String ServerUrl; // server url
-  final int ServerPort; // default 80
-  final String ServerProtocol; // http or https
+  final String serverUrl; // server url
+  final int serverPort; // default 80
+  final String serverProtocol; // http or https
 
   DreamCore({
-    required this.ServerUrl,
-    this.ServerPort = 80,
-    this.ServerProtocol = 'http',
+    required this.serverUrl,
+    required this.serverPort,
+    required this.serverProtocol,
   });
 
-  bool coreState() =>
-      ServerUrl != null && ServerPort != null && ServerProtocol != null;
+  Future<Uri> coreState() async {
+    Uri uri = Uri.parse('$serverProtocol://$serverUrl:$serverPort');
+    http.Client client = http.Client();
+    http.Response response = await client.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to connect to server');
+    }
+    return uri;
+  }
 }

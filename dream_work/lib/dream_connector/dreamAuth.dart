@@ -11,27 +11,6 @@ enum Path {
   logout,
 }
 
-// demo
-// DreamCore dreamCore = DreamCore(
-//     ServerUrl: "localhost", ServerPort: 3000, ServerProtocol: "http");
-// DreamAuth.instance.dreamCore = dreamCore;
-
-// // demo for register
-// DreamAuth.instance
-//     .createUserWithEmailAndPassword(
-//         email: 'terdwry@test2.com', password: 'test')
-//     .catchError((e) {
-//   print(e); // this mean user name has been take
-// });
-
-// // demo for sign in
-// DreamAuth.instance
-//     .loginWithEmailAndPassword(
-//         email: 'terdwry@test2.com', password: 'test')
-//     .catchError((e) {
-//   print(e);
-// });
-
 /// easy auth with backend
 class DreamAuth {
   static final DreamAuth instance = DreamAuth._internal();
@@ -85,6 +64,7 @@ class DreamAuth {
     });
 
     _post(path: Path.register, headers: headers, body: body);
+    await loginWithEmailAndPassword(email: email, password: password);
   }
 
   /// Attempts to sign in a user with the given email address and password.
@@ -132,12 +112,12 @@ class DreamAuth {
         break;
     }
 
-    final Uri serverUrl = Uri.parse(
-        '${_dreamCore.ServerProtocol}://${_dreamCore.ServerUrl}:${_dreamCore.ServerPort}$_path');
+    final Uri serverUrl = await _dreamCore.coreState();
     final http.Client client = http.Client();
     final response = await client.post(serverUrl, headers: headers, body: body);
+
     if (response.statusCode != 200) {
-      throw Exception(response.body);
+      throw Exception(json.decode(response.body)['error']);
     }
     return response.body;
   }

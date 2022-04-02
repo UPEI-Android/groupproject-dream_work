@@ -15,7 +15,7 @@ class _ProfileTabState extends State<ProfileTab> {
 
   double _height = 80;
   bool _isExpanded = false;
-  bool _error = false;
+  String _errorMsg = '';
 
   @override
   void initState() {
@@ -45,8 +45,8 @@ class _ProfileTabState extends State<ProfileTab> {
               return snap.data == null
                   ? _authTag()
                   : Profile(
-                      userEmail: snap.data['email'],
-                      userName: snap.data['name'],
+                      userEmail: snap.data['email'] ?? '',
+                      userName: snap.data['name'] ?? '',
                       showLogout: true,
                     );
             },
@@ -84,7 +84,8 @@ class _ProfileTabState extends State<ProfileTab> {
               });
             });
           },
-          child: const Text('Login', style: TextStyle(fontSize: 30.0)));
+          child:
+              const Text('Login / Register', style: TextStyle(fontSize: 30.0)));
 
   Widget _loginForm() => Form(
         child: Container(
@@ -94,10 +95,9 @@ class _ProfileTabState extends State<ProfileTab> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _error
-                    ? const Text('Wrong Username or Password',
-                        style: TextStyle(color: Colors.red))
-                    : const Text(''),
+                Text(_errorMsg,
+                    style: const TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold)),
                 TextFormField(
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
@@ -116,35 +116,60 @@ class _ProfileTabState extends State<ProfileTab> {
                     labelStyle: TextStyle(fontSize: 20),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final String email = _email.text;
-                    final String password = _password.text;
-
-                    await DreamAuth.instance
-                        .loginWithEmailAndPassword(
-                            email: email, password: password)
-                        .catchError((e) {
-                      setState(() {
-                        _error = true;
-                      });
-                    });
-
-                    if (!_error) {
-                      setState(() {
-                        _height = 100;
-                        _isExpanded = false;
-                      });
-                    }
-                  },
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 30.0),
-                  ),
-                ),
+                _errorMsg == 'No such user' ? _registerBtn() : _signinBtn(),
               ],
             ),
           ),
+        ),
+      );
+
+  Widget _signinBtn() => ElevatedButton(
+        onPressed: () async {
+          final String email = _email.text;
+          final String password = _password.text;
+          await DreamAuth.instance
+              .loginWithEmailAndPassword(email: email, password: password)
+              .then((value) => {
+                    setState(() {
+                      _height = 100;
+                      _isExpanded = false;
+                      _errorMsg = '';
+                    })
+                  })
+              .catchError((e) {
+            setState(() {
+              _errorMsg = e.toString().split(': ').last;
+            });
+          });
+        },
+        child: const Text(
+          'Login',
+          style: TextStyle(fontSize: 30.0),
+        ),
+      );
+
+  Widget _registerBtn() => ElevatedButton(
+        onPressed: () async {
+          final String email = _email.text;
+          final String password = _password.text;
+          await DreamAuth.instance
+              .createUserWithEmailAndPassword(email: email, password: password)
+              .then((value) => {
+                    setState(() {
+                      _height = 100;
+                      _isExpanded = false;
+                      _errorMsg = '';
+                    })
+                  })
+              .catchError((e) {
+            setState(() {
+              _errorMsg = e.toString().split(': ').last;
+            });
+          });
+        },
+        child: const Text(
+          'Resgister',
+          style: TextStyle(fontSize: 30.0),
         ),
       );
 }

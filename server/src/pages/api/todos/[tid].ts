@@ -20,7 +20,6 @@ export default Object.create(handler)
             tid: tid as string
         }
     })
-    console.log(data)
     if(data.count == 0) return res.status(400).json({ error: 'No todo item found' });
     res.status(200).json(data);
 })
