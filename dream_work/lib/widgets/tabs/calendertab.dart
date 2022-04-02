@@ -5,7 +5,7 @@ class CalenderTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
         child: Icon(Icons.calendar_month, size: 64.0, color: Colors.green));
   }
 }

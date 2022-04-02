@@ -19,11 +19,9 @@ export default Object.create(generalHandler)
             OR: [
                 {
                     username: username,
-                    password: password
                 },
                 {
                     email: email,
-                    password: password
                 }
             ],
         },
@@ -31,14 +29,16 @@ export default Object.create(generalHandler)
             username: true,
             name: true,
             email: true,
-            password: false,
+            password: true,
         }
     })
 
-    if(data == null) return res.status(400).json({ error: 'Wrong account information provided'});
+    if(data == null) return res.status(400).json({ error: 'No such user'});
+
+    if(data.password !== password) return res.status(400).json({ error: 'Wrong password'});
 
     // Create a token
-    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET as string)
+    const accessToken = jwt.sign({name: data.username, email: data.email}, process.env.ACCESS_TOKEN_SECRET as string)
     // authenticate seccess
     res.status(200).json({ accessToken: accessToken })
 })

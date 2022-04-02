@@ -3,80 +3,135 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../dream_connector/dreamConnector.dart';
 
-class AuthScreen extends StatelessWidget {
+class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
   static const routeName = '/welcome';
 
   @override
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  late final TextEditingController _serverUrlController;
+  late final TextEditingController _serverPortController;
+  bool _isHttps = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _serverPortController = TextEditingController();
+    _serverUrlController = TextEditingController();
+  }
+
+  @override
+  void dispoes() {
+    _serverPortController.dispose();
+    _serverUrlController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final _serverUrlController = TextEditingController();
-    final _serverPortController = TextEditingController();
-    final _serverProtocolController = TextEditingController();
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          FloatingActionButton(
-            child: const Text('Log In'),
-            onPressed: () {
-              Alert(
-                  context: context,
-                  title: "Log In",
-                  content: Column(
-                    children: <Widget>[
-                      TextField(
-                        controller: _serverUrlController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.computer),
-                          labelText: 'Server Address',
-                        ),
-                      ),
-                      TextField(
-                        controller: _serverPortController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.portrait),
-                          labelText: 'Port',
-                        ),
-                      ),
-                      TextField(
-                        controller: _serverProtocolController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.lock),
-                          labelText: 'Protocol',
-                        ),
-                      ),
-                    ],
+    return Scaffold(
+      backgroundColor: Colors.greenAccent,
+      body: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                TextField(
+                  controller: _serverUrlController,
+                  decoration: InputDecoration(
+                    icon: const Icon(Icons.computer),
+                    labelText: 'Server Address',
+                    errorText: _error,
+                    errorStyle: const TextStyle(color: Colors.red),
                   ),
-                  buttons: [
-                    DialogButton(
-                      onPressed: () {
-                        DreamCore dreamCore = DreamCore(
-                          ServerUrl: _serverUrlController.text,
-                          ServerPort: int.parse(_serverPortController.text),
-                          ServerProtocol: _serverProtocolController.text,
-                        );
-                        DreamAuth.instance.dreamCore = dreamCore;
-                        Navigator.pushNamed(
-                          context,
-                          HomeScreen.routeName,
-                        );
+                ),
+                TextField(
+                  keyboardType: TextInputType.number,
+                  controller: _serverPortController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.portrait),
+                    labelText: 'Port',
+                  ),
+                ),
+                const Divider(
+                  height: 13,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Icon(Icons.https),
+                    const Text(
+                      'HTTPS',
+                    ),
+                    Switch(
+                      value: _isHttps,
+                      onChanged: (value) {
+                        setState(() {
+                          _isHttps = value;
+                        });
                       },
-                      child: const Text(
-                        "Join",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
+                      activeTrackColor: Colors.lightGreenAccent,
+                      activeColor: Colors.green,
                     ),
-                    DialogButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                  ],
+                ),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                int port = _serverPortController.text.isNotEmpty
+                    ? int.parse(_serverPortController.text)
+                    : 80;
+
+                String protocol = _isHttps ? 'https' : 'http';
+
+                setState(() {
+                  _error = _serverUrlController.text.isEmpty ? 'Empty' : null;
+                });
+
+                if (_serverUrlController.text.isEmpty) {
+                  return;
+                }
+
+                DreamCore dreamCore = DreamCore(
+                  serverUrl: _serverUrlController.text,
+                  serverPort: port,
+                  serverProtocol: protocol,
+                );
+
+                DreamAuth.instance.dreamCore = dreamCore;
+
+                await dreamCore
+                    .coreState()
+                    .then(
+                      (value) => Navigator.pushNamed(
+                        context,
+                        HomeScreen.routeName,
                       ),
-                    ),
-                  ]).show();
-            },
-          ),
-        ],
+                    )
+                    .catchError(
+                  (e) {
+                    setState(
+                      () {
+                        _error = 'Failed to connect to server';
+                      },
+                    );
+                  },
+                );
+              },
+              child: const Text(
+                "Join",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
