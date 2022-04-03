@@ -12,7 +12,7 @@ class TeamTab extends StatelessWidget {
     return ListView.builder(
       itemCount: demo.length,
       itemBuilder: (context, index) => GestureDetector(
-        onTap: () {
+        onTap: () async {
           Navigator.pushNamed(
             context,
             IndividualScreen.routeName,

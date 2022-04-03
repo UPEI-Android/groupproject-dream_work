@@ -35,8 +35,8 @@ class TodoTag extends StatelessWidget {
             ],
           ),
           child: Tag(
-            title: prop.title,
-            isDone: prop.isDone,
+            title: prop['tid'],
+            isDone: prop['isDone'],
           )),
     );
   }

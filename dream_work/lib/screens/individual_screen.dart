@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
+import '../../dream_connector/dreamConnector.dart';
 
 class IndividualScreen extends StatelessWidget {
   const IndividualScreen({Key? key}) : super(key: key);
@@ -22,16 +23,22 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DemoItem> demoList = List.generate(
-        20,
-        (index) =>
-            DemoItem('demo item $index', false)); // todo add a real stream
-
-    return ListView.builder(
-      itemCount: demoList.length,
-      itemBuilder: (context, index) => TodoTag(
-        prop: demoList[index],
-      ),
+    return StreamBuilder(
+      stream: DreamDatabase.instance.allItem,
+      builder: (BuildContext context, AsyncSnapshot snap) {
+        return snap.data != null
+            ? ListView.builder(
+                itemCount: snap.data.length,
+                itemBuilder: (context, index) => TodoTag(
+                  prop: snap.data[index],
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.greenAccent,
+                ),
+              );
+      },
     );
   }
 }

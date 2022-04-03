@@ -6,7 +6,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
-enum Path {
+enum AuthPath {
   register,
   login,
   logout,
@@ -17,10 +17,7 @@ class DreamAuth {
   static final DreamAuth instance = DreamAuth._internal();
   late DreamCore _dreamCore;
 
-  // auth infomation
-  String? _authToken;
-  //Map<String, dynamic>? _payload;
-
+  String? _authToken; // auth infomation
   DreamAuth._internal(); // private constructor
 
   set dreamCore(DreamCore _dreamCore) {
@@ -35,7 +32,15 @@ class DreamAuth {
   /// - name
   /// - email
   /// - iat
-  get authStateStream => _authStateStream;
+  get authState => _authStateStream;
+
+  get authToekn {
+    if (_authToken == null) {
+      throw Exception('AuthToken is null');
+    }
+
+    return json.decode(_authToken!)['accessToken'];
+  }
 
   /// Attmpts to logout
   Future logout() async {
@@ -68,7 +73,7 @@ class DreamAuth {
       print('createUserWithEmailAndPassword: $body');
     }
 
-    await _post(path: Path.register, headers: headers, body: body);
+    await _pathResolver(path: AuthPath.register, headers: headers, body: body);
     await loginWithEmailAndPassword(email: email, password: password);
   }
 
@@ -94,7 +99,8 @@ class DreamAuth {
       print('loginWithEmailAndPassword: $body');
     }
 
-    _authToken = await _post(path: Path.login, headers: headers, body: body);
+    _authToken =
+        await _pathResolver(path: AuthPath.login, headers: headers, body: body);
     _authStateStream.add(Jwt.parseJwt(_authToken!));
   }
 
@@ -103,29 +109,30 @@ class DreamAuth {
   /// If state code is 200 return the response body.
   ///
   /// If state code is not 200 throw Error.
-  Future<String> _post({
-    required Path path,
+  Future<String> _pathResolver({
+    required AuthPath path,
     required Map<String, String> headers,
     required String body,
   }) async {
     late String _path;
     switch (path) {
-      case Path.register:
+      case AuthPath.register:
         _path = '/api/auth/register';
         break;
-      case Path.login:
+      case AuthPath.login:
         _path = '/api/auth/login';
         break;
-      case Path.logout:
+      case AuthPath.logout:
         _path = '/api/auth/logout';
         break;
     }
 
-    final baseUrl = await _dreamCore.coreState();
+    final serverUrl = await _dreamCore.coreState();
 
-    final Uri serverUrl = Uri.parse(baseUrl.toString() + _path);
+    final Uri serverUrlWithPath = Uri.parse(serverUrl.toString() + _path);
     final http.Client client = http.Client();
-    final response = await client.post(serverUrl, headers: headers, body: body);
+    final response =
+        await client.post(serverUrlWithPath, headers: headers, body: body);
 
     if (kDebugMode) {
       print('${response.statusCode} response body: ${response.body}');

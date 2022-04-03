@@ -88,7 +88,7 @@ class _ProfileTabState extends State<ProfileTab> {
         duration: const Duration(milliseconds: 200),
         height: _height,
         child: StreamBuilder(
-          stream: DreamAuth.instance.authStateStream,
+          stream: DreamAuth.instance.authState,
           builder: (BuildContext context, AsyncSnapshot snap) {
             return snap.data == null
                 ? _isExpanded
