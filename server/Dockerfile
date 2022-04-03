@@ -5,9 +5,6 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# If using npm with a `package-lock.json` comment out above and use below instead
-# COPY package.json package-lock.json ./ 
-# RUN npm ci
 
 # Rebuild the source code only when needed
 FROM node:17 AS builder
@@ -15,6 +12,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN ls /app/node_modules
+
+# Create tokens
+RUN node ./scripts/jwttoken_gen.js
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -36,8 +36,10 @@ RUN adduser --system --uid 1001 nextjs
 
 # You only need to copy next.config.js if you are NOT using the default configuration
 # COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./src/public
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/.env.production ./scripts/.env.production
 
 # Automatically leverage output traces to reduce image size 
 # https://nextjs.org/docs/advanced-features/output-file-tracing
