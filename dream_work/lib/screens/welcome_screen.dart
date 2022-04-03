@@ -14,8 +14,21 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   late final TextEditingController _serverUrlController;
   late final TextEditingController _serverPortController;
+  bool _isLoading = false;
   bool _isHttps = false;
   String? _error;
+
+  void _setLoading(bool isLoading) {
+    setState(() {
+      _isLoading = isLoading;
+    });
+  }
+
+  void _setError([String? error]) {
+    setState(() {
+      _error = error;
+    });
+  }
 
   @override
   void initState() {
@@ -25,7 +38,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   @override
-  void dispoes() {
+  void dispose() {
     _serverPortController.dispose();
     _serverUrlController.dispose();
     super.dispose();
@@ -86,23 +99,26 @@ class _AuthScreenState extends State<AuthScreen> {
               ],
             ),
             ElevatedButton(
+              child: Text(
+                _isLoading ? 'loading..' : "Join",
+                style: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
               onPressed: () async {
-                String serverUrl = 'dream.luobo.ca';
+                if (_serverUrlController.text.isEmpty) {
+                  _setError('Server address is required');
+                  return;
+                }
+
+                String serverUrl = _serverUrlController.text;
+                String protocol = _isHttps ? 'https' : 'http';
                 int port = _serverPortController.text.isNotEmpty
                     ? int.parse(_serverPortController.text)
                     : _isHttps
                         ? 443
                         : 80;
 
-                String protocol = _isHttps ? 'https' : 'http';
-
-                setState(() {
-                  _error = _serverUrlController.text.isEmpty ? 'Empty' : null;
-                });
-
-                if (_serverUrlController.text.isEmpty) {
-                  return;
-                }
+                _setLoading(true);
+                _setError(null);
 
                 DreamCore dreamCore = DreamCore(
                   serverUrl: serverUrl,
@@ -122,18 +138,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     )
                     .catchError(
                   (e) {
-                    setState(
-                      () {
-                        _error = e.toString();
-                      },
-                    );
+                    _setError('Failed to connect to server');
                   },
                 );
+                _setLoading(false);
               },
-              child: const Text(
-                "Join",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
             ),
           ],
         ),

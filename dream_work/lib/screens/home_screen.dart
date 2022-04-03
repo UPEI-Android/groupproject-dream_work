@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 PreferredSizeWidget _appbar(BuildContext context) => AppBar(
-      automaticallyImplyLeading: false,
+      //automaticallyImplyLeading: false,
       title: Padding(
         padding: const EdgeInsets.only(left: 9.0),
         child: Text(

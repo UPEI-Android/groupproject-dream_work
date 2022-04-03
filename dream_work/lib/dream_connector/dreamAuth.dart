@@ -64,6 +64,10 @@ class DreamAuth {
       'password': password,
     });
 
+    if (kDebugMode) {
+      print('createUserWithEmailAndPassword: $body');
+    }
+
     await _post(path: Path.register, headers: headers, body: body);
     await loginWithEmailAndPassword(email: email, password: password);
   }
@@ -85,6 +89,10 @@ class DreamAuth {
       'email': email,
       'password': password,
     });
+
+    if (kDebugMode) {
+      print('loginWithEmailAndPassword: $body');
+    }
 
     _authToken = await _post(path: Path.login, headers: headers, body: body);
     _authStateStream.add(Jwt.parseJwt(_authToken!));
@@ -120,8 +128,7 @@ class DreamAuth {
     final response = await client.post(serverUrl, headers: headers, body: body);
 
     if (kDebugMode) {
-      print('response status code: ${response.statusCode}');
-      print('response body: ${response.body}');
+      print('${response.statusCode} response body: ${response.body}');
     }
 
     if (response.statusCode != 200) {
