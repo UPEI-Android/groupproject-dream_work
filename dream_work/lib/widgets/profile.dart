@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../dream_connector/dreamConnector.dart';
+import '../screens/screens.dart';
 
 class Profile extends StatelessWidget {
   const Profile({
@@ -28,6 +29,7 @@ class Profile extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: () async {
                             await DreamAuth.instance.logout();
+                            Navigator.pushNamed(context, AuthScreen.routeName);
                           },
                           child: const Text('Logout'),
                           style: ElevatedButton.styleFrom(primary: Colors.red),
