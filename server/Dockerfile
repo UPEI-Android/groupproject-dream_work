@@ -21,12 +21,14 @@ RUN node ./scripts/jwttoken_gen.js
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 RUN yarn prisma db push
+RUN yarn prisma generate
 RUN yarn build
+RUN chmod 755 ./prisma
 
 # Production image, copy all the files and run next
 FROM node:17 AS runner
 WORKDIR /app
-
+RUN apt-get -qy install openssl
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
@@ -46,7 +48,7 @@ COPY --from=builder /app/.env.production ./scripts/.env.production
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-USER nextjs
+#USER nextjs
 
 EXPOSE 3000
 

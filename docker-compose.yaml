@@ -1,0 +1,6 @@
+services:
+  dream-work-server:
+    restart: unless-stopped
+    image: docker.io/wtc133/dream-work:latest
+    ports:
+      - "3000:3000"

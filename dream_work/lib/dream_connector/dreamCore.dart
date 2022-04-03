@@ -24,7 +24,6 @@ class DreamCore {
   /// return server url if server is available
   /// throw exception if server is not available
   Future<Uri> coreState() async {
-    print(uri);
     http.Client client = http.Client();
     http.Response response = await client.get(
       uri,
