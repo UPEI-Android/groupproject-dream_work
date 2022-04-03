@@ -109,6 +109,9 @@ class _ProfileTabState extends State<ProfileTab> {
                 ),
                 TextFormField(
                   controller: _password,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   keyboardType: TextInputType.visiblePassword,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),

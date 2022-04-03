@@ -44,6 +44,8 @@ class _AuthScreenState extends State<AuthScreen> {
               children: <Widget>[
                 TextField(
                   controller: _serverUrlController,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   decoration: InputDecoration(
                     icon: const Icon(Icons.computer),
                     labelText: 'Server Address',
@@ -85,9 +87,12 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
+                String serverUrl = 'dream.luobo.ca';
                 int port = _serverPortController.text.isNotEmpty
                     ? int.parse(_serverPortController.text)
-                    : 80;
+                    : _isHttps
+                        ? 443
+                        : 80;
 
                 String protocol = _isHttps ? 'https' : 'http';
 
@@ -100,7 +105,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 }
 
                 DreamCore dreamCore = DreamCore(
-                  serverUrl: _serverUrlController.text,
+                  serverUrl: serverUrl,
                   serverPort: port,
                   serverProtocol: protocol,
                 );
@@ -119,7 +124,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   (e) {
                     setState(
                       () {
-                        _error = 'Failed to connect to server';
+                        _error = e.toString();
                       },
                     );
                   },
