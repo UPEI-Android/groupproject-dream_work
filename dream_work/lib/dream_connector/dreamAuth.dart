@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'dart:convert';
 import 'package:dream_work/dream_connector/dreamCore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
@@ -114,11 +115,14 @@ class DreamAuth {
 
     final baseUrl = await _dreamCore.coreState();
 
-    print(body);
-
     final Uri serverUrl = Uri.parse(baseUrl.toString() + _path);
     final http.Client client = http.Client();
     final response = await client.post(serverUrl, headers: headers, body: body);
+
+    if (kDebugMode) {
+      print('response status code: ${response.statusCode}');
+      print('response body: ${response.body}');
+    }
 
     if (response.statusCode != 200) {
       throw Exception(json.decode(response.body)['error']);
