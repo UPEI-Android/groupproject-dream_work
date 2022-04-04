@@ -21,12 +21,16 @@ class DreamAuth {
   final BehaviorSubject _authStateStream =
       BehaviorSubject<Map<String, dynamic>?>.seeded(null);
 
+  final BehaviorSubject _isLoading = BehaviorSubject<bool>.seeded(false);
+
   /// Return the user information in the authtoken
   /// - username
   /// - name
   /// - email
   /// - iat
   get authState => _authStateStream;
+
+  get isLoading => _isLoading;
 
   get authToekn {
     if (_authToken == null) {
@@ -42,9 +46,11 @@ class DreamAuth {
 
   /// Attmpts to logout
   Future logout() async {
+    _isLoading.add(true);
     _authToken = null;
     Map<String, dynamic>? empty;
     _authStateStream.add(empty);
+    _isLoading.add(false);
   }
 
   /// Attempts to register a user with the given email address password and optional username.
@@ -57,6 +63,7 @@ class DreamAuth {
     required String email,
     required String password,
   }) async {
+    _isLoading.add(true);
     const Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -77,6 +84,7 @@ class DreamAuth {
         body: body,
         dreamCore: _dreamCore);
     await loginWithEmailAndPassword(email: email, password: password);
+    _isLoading.add(false);
   }
 
   /// Attempts to sign in a user with the given email address and password.
@@ -88,6 +96,7 @@ class DreamAuth {
     required String email,
     required String password,
   }) async {
+    _isLoading.add(true);
     const Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -104,6 +113,7 @@ class DreamAuth {
     _authToken = await post(
         path: Path.login, headers: headers, body: body, dreamCore: _dreamCore);
     _authStateStream.add(Jwt.parseJwt(_authToken!));
+    _isLoading.add(false);
   }
 
   factory DreamAuth() {

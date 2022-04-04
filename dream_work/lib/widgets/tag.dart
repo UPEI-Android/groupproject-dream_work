@@ -5,21 +5,21 @@ class Tag extends StatelessWidget {
     Key? key,
     required this.title,
     required this.isDone,
-    this.margin = const EdgeInsets.all(3),
     this.height = 50,
     this.widget,
+    this.isEditable = true,
   }) : super(key: key);
 
   final String title;
   final bool isDone;
-  final EdgeInsetsGeometry margin;
+  final bool isEditable;
   final double height;
   final Widget? widget;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: margin,
+      margin: const EdgeInsets.all(5),
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

@@ -14,16 +14,9 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   late final TextEditingController _server;
 
-  bool _isLoading = false;
   bool _isHttps = true;
   bool _isServerConnected = false;
   String? _error;
-
-  void _setLoading(bool isLoading) {
-    setState(() {
-      _isLoading = isLoading;
-    });
-  }
 
   void _setserverError([String? error]) {
     setState(() {
@@ -124,11 +117,17 @@ class _AuthScreenState extends State<AuthScreen> {
                       ],
                     ),
                     ElevatedButton(
-                      child: Text(
-                        _isLoading ? 'Connecting..' : "Connect",
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 20),
-                      ),
+                      child: StreamBuilder<Object>(
+                          stream: DreamAuth.instance.isLoading,
+                          builder: (context, AsyncSnapshot snap) {
+                            return Text(
+                              snap.data || !snap.hasData
+                                  ? 'Connecting..'
+                                  : "Connect",
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 20),
+                            );
+                          }),
                       onPressed: () async {
                         if (_server.text.isEmpty) {
                           _setserverError('Server address is required');
@@ -150,7 +149,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           _setserverError('Invalid server address');
                         }
 
-                        _setLoading(true);
                         _setserverError(null);
 
                         DreamCore dreamCore = DreamCore(
@@ -174,7 +172,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             _setserverError('Failed to connect to server');
                           },
                         );
-                        _setLoading(false);
                       },
                     ),
                   ],

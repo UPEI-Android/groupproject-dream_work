@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'utils/utils.dart';
 import 'package:flutter/foundation.dart';
-import 'utils/fetcher.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dreamAuth.dart';
 import 'dreamCore.dart';
@@ -29,8 +29,23 @@ class DreamDatabase {
 
   get isLoading => _isLoadingStream;
 
+  /// Read data from database every 10 seconds
+  /// and update the stream
+  /// This method is called when the app is opened
+  void connect() {
+    _readFromDatabaseAllItem();
+    Timer.periodic(const Duration(seconds: 10), (timer) {
+      _readFromDatabaseAllItem();
+    });
+  }
+
+  void disconnect() {
+    _databaseStream.close();
+  }
+
   // methods use read from database
 
+  /// Read all the todoitems belong to the user
   Future<void> _readFromDatabaseAllItem() async {
     final List<Map<String, dynamic>>? data =
         await _readFromDatabase(Path.all).catchError((e) {
@@ -89,6 +104,33 @@ class DreamDatabase {
   }
 
   // method use to delete one item
+
+  Future<void> deleteAll() async {
+    await _deleteFromDatabase(path: Path.all)
+        .then((value) => _readFromDatabaseAllItem());
+  }
+
+  Future<void> _deleteFromDatabase({
+    required Path path,
+  }) async {
+    isLoading.add(true);
+    final authToken = await DreamAuth.instance.authToekn;
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'authorization': authToken,
+    };
+    final String body = jsonEncode([]);
+
+    if (kDebugMode) {
+      print('_delete: ${body.toString().split(":").first}');
+    }
+
+    await delete(
+            path: path, headers: headers, body: body, dreamCore: _dreamCore)
+        .catchError((e) => throw Exception('faild to delete: $e'));
+    isLoading.add(false);
+  }
 
   DreamDatabase._internal();
 

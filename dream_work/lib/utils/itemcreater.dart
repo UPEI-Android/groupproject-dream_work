@@ -1,13 +1,17 @@
+import 'dart:math';
+
 import '../dream_connector/dreamConnector.dart';
 
 /// create a new individual todo item
 createIndividualItem({required String section}) async {
+  // todo: give them real values
+  final bool isDone = Random().nextBool();
   // get a random number
   final Map<String, dynamic> map = {
     "tid": (DateTime.now().millisecondsSinceEpoch).toString(),
     "members": "demo",
     "section": section,
-    "isDone": false,
+    "isDone": isDone,
     "updated_by": "test",
     "updated_at": "undefined",
     "created_at": "undefined",

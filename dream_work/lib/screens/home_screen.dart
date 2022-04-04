@@ -90,9 +90,9 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           StreamBuilder(
             stream: DreamDatabase.instance.isLoading,
-            builder: (context, snap) {
+            builder: (context, AsyncSnapshot snap) {
               return AddButton(
-                isLoading: snap.data as bool,
+                isLoading: snap.data ?? true,
                 onPressed: () {
                   createIndividualItem(section: (DateTime.now()).toString());
                 },

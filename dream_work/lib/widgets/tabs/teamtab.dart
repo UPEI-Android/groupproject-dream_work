@@ -20,15 +20,17 @@ class TeamTab extends StatelessWidget {
           sections = snap.data.map((e) => e['section']).toSet().toList();
 
           // find done percentage of each section
-          for (final String data in sections) {
-            double donePrecent = snap.data
-                    .where((element) => element['section'] == data)
+          for (final String section in sections) {
+            double finshPrecentage = snap.data
+                    .where((element) => element['section'] == section)
                     .map((element) => element['isDone'].toString())
                     .toList()
                     .where((element) => element == 'true')
                     .length /
-                snap.data.where((element) => element['section'] == data).length;
-            final result = <String, double>{data: donePrecent};
+                snap.data
+                    .where((element) => element['section'] == section)
+                    .length;
+            final result = <String, double>{section: finshPrecentage};
             sectionDonePercentage.addEntries(result.entries);
           }
         }
@@ -50,9 +52,11 @@ class TeamTab extends StatelessWidget {
                     child: Tag(
                       title: sections[index],
                       isDone: false,
-                      height: 100,
+                      isEditable: false,
+                      height: 90,
                       widget: Progerss(
-                          precent: sectionDonePercentage[sections[index]]!),
+                        precent: sectionDonePercentage[sections[index]]!,
+                      ),
                     ),
                   ),
                 ),
