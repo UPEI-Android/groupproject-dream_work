@@ -153,6 +153,7 @@ class _UserAuthState extends State<UserAuth> {
     await fn.then(
       (value) {
         _authSeccess();
+        DreamDatabase.instance.connect();
       },
     ).catchError(
       (e) {

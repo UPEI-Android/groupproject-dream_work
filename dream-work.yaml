@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: Dream-Work-Deployment
+  labels:
+    app: dream-work
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dream-work
+  template:
+    metadata:
+      labels:
+        app: dream-work
+    spec:
+      containers:
+      - name: dream-work
+        image: docker.io/wtc133/dream-work:latest
+        ports:
+        - containerPort: 3000

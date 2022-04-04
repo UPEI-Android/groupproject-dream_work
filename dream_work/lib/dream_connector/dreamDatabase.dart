@@ -7,18 +7,16 @@ import 'dreamAuth.dart';
 import 'dreamCore.dart';
 
 class DreamDatabase {
-  late DreamCore _dreamCore;
-
   static final DreamDatabase instance = DreamDatabase._internal();
 
-  set dreamCore(DreamCore _dreamCore) {
-    this._dreamCore = _dreamCore;
-  }
+  late DreamCore _dreamCore;
 
+  // streams
   final BehaviorSubject<List<Map<String, dynamic>>?> _databaseStream =
       BehaviorSubject<List<Map<String, dynamic>>?>.seeded(null);
-
   final BehaviorSubject<bool> _isLoadingStream =
+      BehaviorSubject<bool>.seeded(false);
+  final BehaviorSubject<bool> _isConnectedStream =
       BehaviorSubject<bool>.seeded(false);
 
   /// Return a stream contains all the todoitems belong to the user
@@ -27,20 +25,39 @@ class DreamDatabase {
     return _databaseStream;
   }
 
-  get isLoading => _isLoadingStream;
+  /// Return a stream contains the loading status
+  get loadingState => _isLoadingStream;
+
+  /// Return a stream contains the connection status
+  get connectedState => _isConnectedStream;
+
+  /// Set the dreamCore
+  set dreamCore(DreamCore _dreamCore) {
+    this._dreamCore = _dreamCore;
+  }
 
   /// Read data from database every 10 seconds
   /// and update the stream
   /// This method is called when the app is opened
-  void connect() {
+  Future connect() async {
+    if (_isConnectedStream.value == true) return Future.value();
     _readFromDatabaseAllItem();
-    Timer.periodic(const Duration(seconds: 10), (timer) {
-      _readFromDatabaseAllItem();
-    });
+    Timer.periodic(
+      const Duration(seconds: 10),
+      (timer) {
+        _readFromDatabaseAllItem()
+            .then((value) => _isConnectedStream.add(true))
+            .catchError((e) {
+          _isConnectedStream.add(false);
+          timer.cancel();
+        });
+      },
+    );
   }
 
-  void disconnect() {
-    _databaseStream.close();
+  // todo
+  disconnect() {
+    //_databaseStream.close();
   }
 
   // methods use read from database
@@ -59,10 +76,10 @@ class DreamDatabase {
   Future<List<Map<String, dynamic>>?> _readFromDatabase(
     Path path,
   ) async {
-    isLoading.add(true);
+    loadingState.add(true);
     final Uri url = await pathResolver(path: path, dreamCore: _dreamCore);
     final authToken = await DreamAuth.instance.authToekn;
-    isLoading.add(false);
+    loadingState.add(false);
     return IndividualFetcher(
       authToken: authToken,
       serverUrl: url,
@@ -85,7 +102,7 @@ class DreamDatabase {
     required Path path,
     required List<Map<String, dynamic>> items,
   }) async {
-    isLoading.add(true);
+    loadingState.add(true);
     final authToken = await DreamAuth.instance.authToekn;
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -100,7 +117,7 @@ class DreamDatabase {
 
     await post(path: path, headers: headers, body: body, dreamCore: _dreamCore)
         .catchError((e) => throw Exception('faild to write to database: $e'));
-    isLoading.add(false);
+    loadingState.add(false);
   }
 
   // method use to delete one item
@@ -113,7 +130,7 @@ class DreamDatabase {
   Future<void> _deleteFromDatabase({
     required Path path,
   }) async {
-    isLoading.add(true);
+    loadingState.add(true);
     final authToken = await DreamAuth.instance.authToekn;
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -129,7 +146,7 @@ class DreamDatabase {
     await delete(
             path: path, headers: headers, body: body, dreamCore: _dreamCore)
         .catchError((e) => throw Exception('faild to delete: $e'));
-    isLoading.add(false);
+    loadingState.add(false);
   }
 
   DreamDatabase._internal();

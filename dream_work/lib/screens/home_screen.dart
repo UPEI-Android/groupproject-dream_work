@@ -75,9 +75,25 @@ class _HomeScreenState extends State<HomeScreen>
         automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(left: 9.0),
-          child: Text(
-            _date4today(),
-            style: const TextStyle(fontSize: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                _date4today(),
+                style: const TextStyle(fontSize: 25),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: StreamBuilder(
+                  stream: DreamDatabase.instance.connectedState,
+                  builder: (context, AsyncSnapshot snapshot) {
+                    return snapshot.data || snapshot.data != null
+                        ? const Icon(Icons.cloud_circle, color: Colors.green)
+                        : const Icon(Icons.cloud_circle, color: Colors.red);
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         elevation: 12,
@@ -89,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen>
             },
           ),
           StreamBuilder(
-            stream: DreamDatabase.instance.isLoading,
+            stream: DreamDatabase.instance.loadingState,
             builder: (context, AsyncSnapshot snap) {
               return AddButton(
                 isLoading: snap.data ?? true,

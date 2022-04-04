@@ -58,7 +58,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
             ),
           ),
           StreamBuilder(
-            stream: DreamDatabase.instance.isLoading,
+            stream: DreamDatabase.instance.loadingState,
             builder: (context, AsyncSnapshot snap) {
               return AddButton(
                 isLoading: snap.data ?? true,
