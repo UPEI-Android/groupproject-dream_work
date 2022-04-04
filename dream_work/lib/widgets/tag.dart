@@ -7,12 +7,14 @@ class Tag extends StatelessWidget {
     required this.isDone,
     this.margin = const EdgeInsets.all(3),
     this.height = 50,
+    this.widget,
   }) : super(key: key);
 
   final String title;
   final bool isDone;
   final EdgeInsetsGeometry margin;
   final double height;
+  final Widget? widget;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,8 @@ class Tag extends StatelessWidget {
       margin: margin,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: const Color.fromARGB(255, 16, 28, 65),
+        borderRadius: BorderRadius.circular(10),
+        color: const Color.fromARGB(255, 28, 41, 83),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.4),
@@ -32,13 +34,20 @@ class Tag extends StatelessWidget {
         ],
       ),
       child: Row(
-        children: [
-          _checkBox(
-            isDone: isDone,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: [
+              _checkBox(
+                isDone: isDone,
+              ),
+              _title(
+                title:
+                    title.length < 13 ? title : title.substring(0, 13) + '...',
+              ),
+            ],
           ),
-          _title(
-            title: title,
-          ),
+          widget ?? Container(),
         ],
       ),
     );
@@ -52,6 +61,9 @@ Widget _checkBox({
   bool isDone = false,
 }) =>
     Checkbox(
+      shape: const CircleBorder(),
+      activeColor: Colors.green,
+      checkColor: Colors.green,
       value: isDone,
       onChanged: (value) {
         isDone = true;

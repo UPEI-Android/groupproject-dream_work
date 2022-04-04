@@ -1,7 +1,7 @@
-import 'package:dream_work/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dreamConnector.dart';
 import '../../screens/screens.dart';
+import '../widgets.dart';
 
 class TeamTab extends StatelessWidget {
   const TeamTab({Key? key}) : super(key: key);
@@ -12,10 +12,25 @@ class TeamTab extends StatelessWidget {
     return StreamBuilder(
       stream: DreamDatabase.instance.allItem,
       builder: (BuildContext context, AsyncSnapshot snap) {
-        var sections;
-        //find unique section
+        Map<String, double> sectionDonePercentage = {};
+        List<dynamic> sections = [];
+
         if (snap.data != null) {
+          // find unique section
           sections = snap.data.map((e) => e['section']).toSet().toList();
+
+          // find done percentage of each section
+          for (final String data in sections) {
+            double donePrecent = snap.data
+                    .where((element) => element['section'] == data)
+                    .map((element) => element['isDone'].toString())
+                    .toList()
+                    .where((element) => element == 'true')
+                    .length /
+                snap.data.where((element) => element['section'] == data).length;
+            final result = <String, double>{data: donePrecent};
+            sectionDonePercentage.addEntries(result.entries);
+          }
         }
 
         return snap.data != null
@@ -36,6 +51,8 @@ class TeamTab extends StatelessWidget {
                       title: sections[index],
                       isDone: false,
                       height: 100,
+                      widget: Progerss(
+                          precent: sectionDonePercentage[sections[index]]!),
                     ),
                   ),
                 ),
