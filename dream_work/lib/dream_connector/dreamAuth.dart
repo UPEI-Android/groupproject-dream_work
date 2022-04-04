@@ -1,6 +1,6 @@
 // ignore: file_names
 import 'dart:convert';
-import 'utils.dart';
+import 'utils/utils.dart';
 import 'package:dream_work/dream_connector/dreamCore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jwt_decode/jwt_decode.dart';

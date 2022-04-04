@@ -1,7 +1,8 @@
 // ignore_for_file: constant_identifier_names
-
+import '../dream_connector/dreamConnector.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
+import '../utils/utils.dart';
 
 enum Month {
   January,
@@ -69,34 +70,38 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
-}
 
-PreferredSizeWidget _appbar(BuildContext context) => AppBar(
-      automaticallyImplyLeading: false,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 9.0),
-        child: Text(
-          _date4today(),
-          style: const TextStyle(fontSize: 25),
+  PreferredSizeWidget _appbar(BuildContext context) => AppBar(
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 9.0),
+          child: Text(
+            _date4today(),
+            style: const TextStyle(fontSize: 25),
+          ),
         ),
-      ),
-      elevation: 12,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () {
-            // todo add a real action for search
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.add),
-          color: Colors.yellow,
-          onPressed: () {
-            // todo add a real action for add
-          },
-        ),
-      ],
-    );
+        elevation: 12,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              // todo add a real action for search
+            },
+          ),
+          StreamBuilder(
+            stream: DreamDatabase.instance.isLoading,
+            builder: (context, snap) {
+              return AddButton(
+                isLoading: snap.data as bool,
+                onPressed: () {
+                  createIndividualItem(section: (DateTime.now()).toString());
+                },
+              );
+            },
+          ),
+        ],
+      );
+}
 
 String _date4today() =>
     Month.values[DateTime.now().month - 1].toString().split('.').last +

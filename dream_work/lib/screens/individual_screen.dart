@@ -1,16 +1,12 @@
-import 'dart:math';
-
+import '../dream_connector/dreamConnector.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
-import '../../dream_connector/dreamConnector.dart';
+import '../utils/utils.dart';
 
 class IndividualScreen extends StatefulWidget {
   const IndividualScreen({
     Key? key,
-    this.individualTitle,
   }) : super(key: key);
-
-  final String? individualTitle;
   static const routeName = '/individual';
 
   @override
@@ -18,83 +14,59 @@ class IndividualScreen extends StatefulWidget {
 }
 
 class _IndividualScreenState extends State<IndividualScreen> {
-  bool _isLoading = false;
-
-  void setLoading(bool isLoading) {
-    setState(() {
-      _isLoading = isLoading;
-    });
-  }
-
+  late String section;
   @override
   Widget build(BuildContext context) {
+    section = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar: _appBar(),
-      body: const TodoList(),
+      body: todoList(),
     );
   }
 
   PreferredSizeWidget _appBar() => AppBar(
-        title: const Text(
-          'demo',
-          style: TextStyle(fontSize: 25),
+        title: Text(
+          section,
+          style: const TextStyle(fontSize: 25),
         ),
         elevation: 12,
         actions: [
-          _isLoading
-              ? const CircularProgressIndicator()
-              : IconButton(
-                  icon: const Icon(Icons.add),
-                  color: Colors.yellow,
-                  onPressed: () {
-                    _createIndividualItem();
-                  },
-                ),
+          StreamBuilder(
+            stream: DreamDatabase.instance.isLoading,
+            builder: (context, snap) {
+              return AddButton(
+                isLoading: snap.data as bool,
+                onPressed: () {
+                  createIndividualItem(section: section);
+                },
+              );
+            },
+          )
         ],
       );
 
-  /// create a new individual todo item
-  void _createIndividualItem() async {
-    // get a random number
-    final Map<String, dynamic> map = {
-      "tid": (DateTime.now().millisecondsSinceEpoch).toString(),
-      "members": "demo",
-      "section": 'demo',
-      "isDone": false,
-      "updated_by": "test",
-      "updated_at": "undefined",
-      "created_at": "undefined",
-      "due_at": "test",
-      "content": "test"
-    };
+  Widget todoList() => StreamBuilder(
+        stream: DreamDatabase.instance.allItem,
+        builder: (BuildContext context, AsyncSnapshot snap) {
+          var list;
+          if (snap.data != null) {
+            list = snap.data
+                .where((element) => element['section'] == section)
+                .toList();
+          }
 
-    setLoading(true);
-    await DreamDatabase.instance.writeOne(map);
-    setLoading(false);
-  }
-}
-
-class TodoList extends StatelessWidget {
-  const TodoList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: DreamDatabase.instance.allItem,
-      builder: (BuildContext context, AsyncSnapshot snap) {
-        return snap.data != null
-            ? ListView.builder(
-                itemCount: snap.data.length,
-                itemBuilder: (context, index) => TodoTag(
-                  prop: snap.data[index],
-                ),
-              )
-            : const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.greenAccent,
-                ),
-              );
-      },
-    );
-  }
+          return snap.data != null
+              ? ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (context, index) => TodoTag(
+                    prop: list[index],
+                  ),
+                )
+              : const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.greenAccent,
+                  ),
+                );
+        },
+      );
 }

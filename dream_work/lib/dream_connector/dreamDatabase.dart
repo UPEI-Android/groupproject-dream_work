@@ -1,9 +1,7 @@
 import 'dart:convert';
-
-import 'utils.dart';
-
+import 'utils/utils.dart';
 import 'package:flutter/foundation.dart';
-import 'fetcher.dart';
+import 'utils/fetcher.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dreamAuth.dart';
 import 'dreamCore.dart';
@@ -20,11 +18,16 @@ class DreamDatabase {
   final BehaviorSubject<List<Map<String, dynamic>>?> _databaseStream =
       BehaviorSubject<List<Map<String, dynamic>>?>.seeded(null);
 
+  final BehaviorSubject<bool> _isLoadingStream =
+      BehaviorSubject<bool>.seeded(false);
+
   /// Return a stream contains all the todoitems belong to the user
   get allItem {
     _readFromDatabaseAllItem();
     return _databaseStream;
   }
+
+  get isLoading => _isLoadingStream;
 
   // methods use read from database
 
@@ -41,9 +44,10 @@ class DreamDatabase {
   Future<List<Map<String, dynamic>>?> _readFromDatabase(
     Path path,
   ) async {
+    isLoading.add(true);
     final Uri url = await pathResolver(path: path, dreamCore: _dreamCore);
     final authToken = await DreamAuth.instance.authToekn;
-
+    isLoading.add(false);
     return IndividualFetcher(
       authToken: authToken,
       serverUrl: url,
@@ -66,6 +70,7 @@ class DreamDatabase {
     required Path path,
     required List<Map<String, dynamic>> items,
   }) async {
+    isLoading.add(true);
     final authToken = await DreamAuth.instance.authToekn;
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -80,6 +85,7 @@ class DreamDatabase {
 
     await post(path: path, headers: headers, body: body, dreamCore: _dreamCore)
         .catchError((e) => throw Exception('faild to write to database: $e'));
+    isLoading.add(false);
   }
 
   // method use to delete one item

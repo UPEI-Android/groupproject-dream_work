@@ -1,1 +1,1 @@
-export '../dream_connector/fetcher.dart';
+export '../dream_connector/utils/fetcher.dart';

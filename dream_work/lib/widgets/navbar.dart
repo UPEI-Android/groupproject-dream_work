@@ -18,7 +18,7 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; // size of the screen
     return Positioned(
-      bottom: 0.05 * size.height,
+      bottom: 0.035 * size.height,
       child: SizedBox(
         width: 160,
         height: 70,
