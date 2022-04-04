@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,3 +20,38 @@ spec:
         image: docker.io/wtc133/dream-work:latest
         ports:
         - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dream-work-service
+spec:
+  selector:
+    app: dream-work
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dream-work-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-redirect-https@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: dream.luobo.ca
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dream-work
+                port:
+                  number: 
+                  
