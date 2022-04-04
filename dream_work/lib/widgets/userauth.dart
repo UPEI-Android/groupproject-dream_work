@@ -14,6 +14,7 @@ class _UserAuthState extends State<UserAuth> {
   String? _error;
   late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _name;
 
   void _setError([String? error]) {
     setState(() {
@@ -31,6 +32,7 @@ class _UserAuthState extends State<UserAuth> {
   void initState() {
     super.initState();
     _email = TextEditingController();
+    _name = TextEditingController();
     _password = TextEditingController();
   }
 
@@ -38,11 +40,13 @@ class _UserAuthState extends State<UserAuth> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _name.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    bool _isRegister = _error == 'No such user';
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -58,11 +62,30 @@ class _UserAuthState extends State<UserAuth> {
                     Icons.error,
                     color: Colors.red,
                   ),
-            labelText: 'User Name',
+            labelText: 'Email',
             errorText: _error,
             errorStyle: const TextStyle(color: Colors.red),
           ),
         ),
+        _isRegister
+            ? TextField(
+                controller: _name,
+                enableSuggestions: false,
+                autocorrect: false,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  icon: _error == null
+                      ? const Icon(Icons.lock)
+                      : const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                  labelText: 'Name',
+                  errorText: _error,
+                  errorStyle: const TextStyle(color: Colors.red),
+                ),
+              )
+            : Container(),
         TextField(
           controller: _password,
           enableSuggestions: false,
@@ -106,8 +129,13 @@ class _UserAuthState extends State<UserAuth> {
           _setLoading(true);
           final String email = _email.text;
           final String password = _password.text;
-          await _sentForm(email, password, _error != 'No such user');
-          _setLoading(false);
+          await _sentForm(email, password, _error != 'No such user')
+              .then((value) {
+            _setLoading(false);
+            _email.clear();
+            _password.clear();
+            _name.clear();
+          });
         },
       );
 
