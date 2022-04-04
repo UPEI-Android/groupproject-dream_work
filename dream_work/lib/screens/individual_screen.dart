@@ -48,7 +48,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
   Widget todoList() => StreamBuilder(
         stream: DreamDatabase.instance.allItem,
         builder: (BuildContext context, AsyncSnapshot snap) {
-          var list;
+          List<dynamic> list = [];
           if (snap.data != null) {
             list = snap.data
                 .where((element) => element['section'] == section)
