@@ -1,6 +1,6 @@
 import 'package:dream_work/widgets/userauth.dart';
 import 'package:flutter/material.dart';
-import '../dream_connector/dreamConnector.dart';
+import '../dream_connector/dream_connector.dart';
 import '../widgets/widgets.dart';
 
 class AuthScreen extends StatefulWidget {

@@ -1,5 +1,5 @@
 // ignore_for_file: constant_identifier_names
-import '../dream_connector/dreamConnector.dart';
+import '../dream_connector/dream_connector.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 import '../utils/utils.dart';

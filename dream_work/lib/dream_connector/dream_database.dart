@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
-import 'dreamAuth.dart';
-import 'dreamCore.dart';
+import 'dream_auth.dart';
+import 'dream_core.dart';
 
 class DreamDatabase {
   static final DreamDatabase instance = DreamDatabase._internal();

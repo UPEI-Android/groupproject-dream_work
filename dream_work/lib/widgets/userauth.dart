@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../dream_connector/dreamConnector.dart';
+import '../dream_connector/dream_connector.dart';
 import '../screens/home_screen.dart';
 
 class UserAuth extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import '../dream_connector/dreamConnector.dart';
+import '../dream_connector/dream_connector.dart';
 
 /// create a new individual todo item
 createIndividualItem({required String section}) async {
