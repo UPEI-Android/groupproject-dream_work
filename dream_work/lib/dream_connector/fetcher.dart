@@ -28,9 +28,8 @@ mixin Individual<T, E> on Fetcher {
     );
 
     if (kDebugMode) {
-      print('fetcher: token - $authToken');
       print(
-          'fetcher: ${response.statusCode} - response body: ${response.body.split(':').first}...');
+          'fetcher_Individual: ${response.statusCode} - response body: ${response.body.split(':').first}...');
     }
 
     if (response.statusCode != 200) {

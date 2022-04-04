@@ -34,12 +34,12 @@ class DreamCore {
 
     if (response.statusCode != 200) {
       if (kDebugMode) {
-        print('Failed to connect $uri');
+        print('dreamCore_coreState: Failed to connect $uri');
       }
       throw Exception('Failed to connect to server');
     }
     if (kDebugMode) {
-      print('successfully connected to $uri');
+      print('dreamCore_coreState: successfully connected to $uri');
     }
 
     return uri;

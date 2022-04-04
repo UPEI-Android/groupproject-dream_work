@@ -15,7 +15,7 @@ class _AuthScreenState extends State<AuthScreen> {
   late final TextEditingController _server;
 
   bool _isLoading = false;
-  bool _isHttps = false;
+  bool _isHttps = true;
   bool _isServerConnected = false;
   String? _error;
 
@@ -59,14 +59,16 @@ class _AuthScreenState extends State<AuthScreen> {
             children: [
               AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
-                height: _isServerConnected ? 80 : 500,
+                height: _isServerConnected ? 110 : 550,
                 child: _serverAuth(),
               ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                height: _isServerConnected ? 380 : 0,
-                child: const UserAuth(),
-              ),
+              _isServerConnected
+                  ? AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      height: 380,
+                      child: const UserAuth(),
+                    )
+                  : Container(),
             ],
           )),
     );
@@ -94,7 +96,12 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
           _isServerConnected
-              ? Container()
+              ? IconButton(
+                  onPressed: () {
+                    _setServerConnected(false);
+                    _setserverError(null);
+                  },
+                  icon: const Icon(Icons.close, color: Colors.red))
               : Column(
                   children: [
                     Row(
