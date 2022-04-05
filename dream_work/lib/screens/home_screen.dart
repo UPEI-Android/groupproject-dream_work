@@ -4,21 +4,6 @@ import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 import '../utils/utils.dart';
 
-enum Month {
-  January,
-  February,
-  March,
-  April,
-  May,
-  June,
-  July,
-  August,
-  September,
-  October,
-  November,
-  December
-}
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   static const routeName = '/home';
@@ -80,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                _date4today(),
+                dateToString(),
                 style: const TextStyle(fontSize: 25),
               ),
               Padding(
@@ -119,8 +104,3 @@ class _HomeScreenState extends State<HomeScreen>
         ],
       );
 }
-
-String _date4today() =>
-    Month.values[DateTime.now().month - 1].toString().split('.').last +
-    " " +
-    DateTime.now().day.toString();

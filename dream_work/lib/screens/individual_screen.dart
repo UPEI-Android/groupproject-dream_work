@@ -1,4 +1,3 @@
-import 'package:flutter_slidable/flutter_slidable.dart';
 import '../dream_connector/dream_connector.dart';
 import 'package:dream_work/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -87,22 +86,21 @@ class _IndividualScreenState extends State<IndividualScreen> {
 
           List<dynamic> taskList =
               findItemsBySecion(sourceData: snap.data, section: section);
-          double finshPrecentage = findFinishPrecentageBySection(
+          double sectionFinishedPercentage = findFinishPrecentageBySection(
               sourceData: snap.data, section: section);
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Tag(
+              SectionCard(
                 title: section,
-                isDone: false,
-                height: 100,
-                widget: TaskProgerss(precent: finshPrecentage),
+                child: TaskProgerss(precent: sectionFinishedPercentage),
               ),
               Expanded(
                 child: ListView.builder(
                   itemCount: taskList.length,
-                  itemBuilder: (context, index) => TaskTag(
-                    prop: taskList[index],
+                  itemBuilder: (context, index) => TaskCard(
+                    isDone: taskList[index]['isDone'] as bool,
+                    content: taskList[index]['content'] as String,
                   ),
                 ),
               )
@@ -110,43 +108,4 @@ class _IndividualScreenState extends State<IndividualScreen> {
           );
         },
       );
-}
-
-/// cutomized [Tag] for individual screen
-class TaskTag extends StatelessWidget {
-  const TaskTag({Key? key, this.prop}) : super(key: key);
-  final dynamic prop;
-
-  @override
-  Widget build(BuildContext context) {
-    return Slidable(
-      startActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        children: [
-          SlidableAction(
-            onPressed: (context) {
-              // todo add a real action
-            },
-            backgroundColor: const Color(0xFFFE4A49),
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Delete',
-          ),
-          SlidableAction(
-            onPressed: (context) {
-              // todo add a real action
-            },
-            backgroundColor: const Color(0xFF21B7CA),
-            foregroundColor: Colors.white,
-            icon: Icons.share,
-            label: 'Share',
-          ),
-        ],
-      ),
-      child: Tag(
-        title: prop['tid'],
-        isDone: prop['isDone'],
-      ),
-    );
-  }
 }

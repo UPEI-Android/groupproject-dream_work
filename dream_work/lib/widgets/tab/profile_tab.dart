@@ -12,22 +12,7 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> {
   final BorderRadiusGeometry borderRadius = BorderRadius.circular(20);
 
-  double _height = 80;
-  bool _isExpanded = false;
-  bool _isLoading = false;
-  String? _error;
-
-  void _setLoading(bool isLoading) {
-    setState(() {
-      _isLoading = isLoading;
-    });
-  }
-
-  void _setError([String? error]) {
-    setState(() {
-      _error = error;
-    });
-  }
+  final double _height = 80;
 
   @override
   Widget build(BuildContext context) {

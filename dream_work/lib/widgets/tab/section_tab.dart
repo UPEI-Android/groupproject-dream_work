@@ -24,9 +24,9 @@ class TeamTab extends StatelessWidget {
         // find unique sections
         final List<dynamic> sections = findSections(sourceData: snap.data);
         // find finished percentage for eachsection
-        final Map<String, double> sectionDonePercentage = {};
+        final Map<String, double> sectionFinishedPercentage = {};
         for (final String section in sections) {
-          sectionDonePercentage.addEntries(<String, double>{
+          sectionFinishedPercentage.addEntries(<String, double>{
             section: findFinishPrecentageBySection(
                 section: section, sourceData: snap.data)
           }.entries);
@@ -34,22 +34,14 @@ class TeamTab extends StatelessWidget {
 
         return ListView.builder(
           itemCount: sections.length,
-          itemBuilder: (context, index) => GestureDetector(
-            onTap: () async {
-              Navigator.pushNamed(
-                context,
-                IndividualScreen.routeName,
-                arguments: sections[index],
-              );
-            },
-            child: Tag(
-              title: sections[index],
-              isDone: false,
-              isEditable: false,
-              height: 85,
-              widget: TaskProgerss(
-                precent: sectionDonePercentage[sections[index]]!,
-              ),
+          itemBuilder: (context, index) => SectionCard(
+            title: sections[index],
+            child: TaskProgerss(
+                precent: sectionFinishedPercentage[sections[index]] ?? 0),
+            onTap: () => Navigator.pushNamed(
+              context,
+              IndividualScreen.routeName,
+              arguments: sections[index],
             ),
           ),
         );

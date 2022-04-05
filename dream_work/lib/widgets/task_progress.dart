@@ -9,7 +9,7 @@ class TaskProgerss extends StatelessWidget {
     final double decPrecent = precent * 10;
     return Container(
       width: 125,
-      height: 28,
+      height: 29,
       decoration: BoxDecoration(
         //color: Colors.black,
         borderRadius: BorderRadius.circular(5),
@@ -17,14 +17,14 @@ class TaskProgerss extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          for (int i = 0; i < 10; i++) progressIcon(decPrecent > i),
+          for (int i = 0; i < 10; i++) _block(decPrecent > i),
         ],
       ),
     );
   }
 }
 
-Widget progressIcon(bool isDone) => Padding(
+Widget _block(bool isDone) => Padding(
       padding: const EdgeInsets.all(2),
       child: Container(
         width: 5,
