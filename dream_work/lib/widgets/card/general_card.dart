@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class GeneralCard extends StatelessWidget {
   const GeneralCard({
     Key? key,
-    required this.height,
+    this.height,
     this.padding = const EdgeInsets.only(left: 28, right: 28, top: 13),
     this.child,
     this.onTap,
     this.backgroundColor = const Color.fromARGB(255, 28, 41, 83),
   }) : super(key: key);
 
-  final double height;
+  final double? height;
   final Widget? child;
   final Function? onTap;
   final EdgeInsetsGeometry padding;
