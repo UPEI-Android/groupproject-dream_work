@@ -12,29 +12,18 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> {
   final BorderRadiusGeometry borderRadius = BorderRadius.circular(20);
 
-  final double _height = 80;
-
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(20),
       children: [
         _authTag(),
         _divider(),
-        Container(
-          height: 100,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            color: Colors.amber,
-          ),
+        const GeneralCard(
+          height: 200,
         ),
         _divider(),
-        Container(
+        const GeneralCard(
           height: 200,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            color: Colors.greenAccent,
-          ),
         ),
         _divider(),
       ],
@@ -43,7 +32,6 @@ class _ProfileTabState extends State<ProfileTab> {
 
   Widget _authTag() => AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        height: _height,
         child: StreamBuilder(
           stream: DreamAuth.instance.authState,
           builder: (BuildContext context, AsyncSnapshot snap) {
@@ -53,7 +41,7 @@ class _ProfileTabState extends State<ProfileTab> {
                       color: Colors.greenAccent,
                     ),
                   )
-                : Profile(
+                : ProfileCard(
                     userEmail: snap.data['email'] ?? '',
                     userName: snap.data['name'] ?? '',
                     showLogout: true,
