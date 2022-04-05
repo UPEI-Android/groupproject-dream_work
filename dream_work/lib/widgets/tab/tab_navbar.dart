@@ -8,10 +8,8 @@ class NavBar extends StatelessWidget {
   const NavBar({
     Key? key,
     required this.tabController,
-    this.prop,
   }) : super(key: key);
   final TabController tabController;
-  final prop; // todo
 
   @override
   Widget build(BuildContext context) {
