@@ -12,6 +12,8 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
 
   CalendarFormat _format = CalendarFormat.month;
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay =  DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +23,33 @@ class _CalendarScreenState extends State<CalendarScreen> {
         firstDay: DateTime(2000),
         focusedDay: DateTime.now(),
         calendarFormat: _format,
+
         onFormatChanged: (CalendarFormat format){
           setState(() {
             _format=format;
           });
         },
+
         startingDayOfWeek: StartingDayOfWeek.monday,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
 
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay; // show all todos for that day
+          });
 
+        },
+
+        onPageChanged: (focusedDay) {
+          _focusedDay = focusedDay;
+        },
+
+        eventLoader: (day) {
+          return _getTODOsForDay(day); //TODO get the task the person has to do for that day
+        },
       ),
     );
   }
