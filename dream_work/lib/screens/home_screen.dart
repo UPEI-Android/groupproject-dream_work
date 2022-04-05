@@ -54,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    DreamDatabase.instance.connect();
     return Scaffold(
       appBar: _appbar(context),
       body: SizedBox(
@@ -87,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen>
                 child: StreamBuilder(
                   stream: DreamDatabase.instance.connectedState,
                   builder: (context, AsyncSnapshot snap) {
-                    return snap.data ?? true
+                    return snap.hasData || snap.data != null || snap.data
                         ? const Icon(Icons.cloud_circle, color: Colors.green)
                         : const Icon(Icons.cloud_circle, color: Colors.red);
                   },

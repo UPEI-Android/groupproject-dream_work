@@ -14,7 +14,8 @@ class DreamAuth {
   }
 
   // core of the dream connector
-  late DreamCore _dreamCore;
+  // using a dummy core to avoid null pointer exception
+  DreamCore _dreamCore = DreamCore.dummyCore();
   // auth infomation
   String? _authToken;
 
@@ -25,9 +26,6 @@ class DreamAuth {
   /// - iat
   final BehaviorSubject _authStateStream =
       BehaviorSubject<Map<String, dynamic>?>.seeded(null);
-
-  /// Stream of [bool]
-  final BehaviorSubject _isLoadingStream = BehaviorSubject<bool>.seeded(false);
 
   /// setter for [_dreamCore]
   set dreamCore(DreamCore _dreamCore) {
@@ -44,7 +42,7 @@ class DreamAuth {
 
   /// getter for [_isLoadingStream]
   /// return a stream of [bool]
-  get isLoading => _isLoadingStream;
+  get isLoading => _dreamCore.isLoading;
 
   // todo update authThoken with new token
   /// getter for [auth]
@@ -56,13 +54,11 @@ class DreamAuth {
 
   /// Attmpts to logout
   Future logout() async {
-    loading(() async {
-      await _dreamCore.close();
-      _authToken = null;
-      Map<String, dynamic>? empty;
-      _authStateStream.add(empty);
-      logger('dreamAuth_logout: success');
-    });
+    await _dreamCore.close();
+    _authToken = null;
+    Map<String, dynamic>? empty;
+    _authStateStream.add(empty);
+    logger('dreamAuth_logout: success');
   }
 
   /// Attempts to register a user with the given email address password and optional username.
@@ -75,23 +71,21 @@ class DreamAuth {
     required String email,
     required String password,
   }) async {
-    loading(() async {
-      final Map<String, String> headers = headerResolver();
-      final String body = jsonEncode({
-        'username': userName ?? email,
-        'email': email,
-        'password': password,
-      });
-
-      logger('dreamAuth_createUserWithEmailAndPassword: $body');
-
-      await post(
-          path: Path.register,
-          headers: headers,
-          body: body,
-          dreamCore: _dreamCore);
-      await loginWithEmailAndPassword(email: email, password: password);
+    final Map<String, String> headers = headerResolver();
+    final String body = jsonEncode({
+      'username': userName ?? email,
+      'email': email,
+      'password': password,
     });
+
+    logger('dreamAuth_createUserWithEmailAndPassword: $body');
+
+    await post(
+        path: Path.register,
+        headers: headers,
+        body: body,
+        dreamCore: _dreamCore);
+    await loginWithEmailAndPassword(email: email, password: password);
   }
 
   /// Attempts to sign in a user with the given email address and password.
@@ -103,27 +97,16 @@ class DreamAuth {
     required String email,
     required String password,
   }) async {
-    loading(() async {
-      final Map<String, String> headers = headerResolver();
-      final String body = jsonEncode({
-        'email': email,
-        'password': password,
-      });
-
-      logger('dreamAuth_loginWithEmailAndPassword: $body');
-
-      _authToken = await post(
-          path: Path.login,
-          headers: headers,
-          body: body,
-          dreamCore: _dreamCore);
-      _authStateStream.add(Jwt.parseJwt(_authToken!));
+    final Map<String, String> headers = headerResolver();
+    final String body = jsonEncode({
+      'email': email,
+      'password': password,
     });
-  }
 
-  Future loading(Function callBack) async {
-    _isLoadingStream.add(true);
-    await callBack();
-    _isLoadingStream.add(false);
+    logger('dreamAuth_loginWithEmailAndPassword: $body');
+
+    _authToken = await post(
+        path: Path.login, headers: headers, body: body, dreamCore: _dreamCore);
+    _authStateStream.add(Jwt.parseJwt(_authToken!));
   }
 }

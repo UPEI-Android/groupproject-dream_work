@@ -152,21 +152,16 @@ class _UserAuthState extends State<UserAuth> {
 
     await fn.then(
       (value) {
-        _authSeccess();
-        DreamDatabase.instance.connect();
+        _setError();
+        Navigator.pushNamed(
+          context,
+          HomeScreen.routeName,
+        );
       },
     ).catchError(
       (e) {
         _setError(e.toString().split(': ').last);
       },
-    );
-  }
-
-  void _authSeccess() {
-    _setError();
-    Navigator.pushNamed(
-      context,
-      HomeScreen.routeName,
     );
   }
 }
