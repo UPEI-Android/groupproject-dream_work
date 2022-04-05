@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                dateToString(),
+                monthAndDayToString(),
                 style: const TextStyle(fontSize: 25),
               ),
               Padding(
@@ -74,8 +74,16 @@ class _HomeScreenState extends State<HomeScreen>
                   stream: DreamDatabase.instance.connectedState,
                   builder: (context, AsyncSnapshot snap) {
                     return snap.hasData || snap.data != null || snap.data
-                        ? const Icon(Icons.cloud_circle, color: Colors.green)
-                        : const Icon(Icons.cloud_circle, color: Colors.red);
+                        ? const Icon(
+                            Icons.cloud_circle,
+                            color: Colors.green,
+                            size: 15,
+                          )
+                        : const Icon(
+                            Icons.cloud_circle,
+                            color: Colors.red,
+                            size: 15,
+                          );
                   },
                 ),
               ),
