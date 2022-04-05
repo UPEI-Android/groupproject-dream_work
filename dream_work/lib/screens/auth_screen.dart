@@ -151,14 +151,11 @@ class _AuthScreenState extends State<AuthScreen> {
 
                         _setserverError(null);
 
-                        DreamCore dreamCore = DreamCore(
+                        DreamCore dreamCore = DreamCore.initializeCore(
                           serverUrl: serverUrl,
                           serverPort: port,
                           serverProtocol: protocol,
                         );
-
-                        DreamAuth.instance.dreamCore = dreamCore;
-                        DreamDatabase.instance.dreamCore = dreamCore;
 
                         await dreamCore
                             .coreState()

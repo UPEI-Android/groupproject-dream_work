@@ -1,56 +1,68 @@
-// ignore: file_names
-import 'dart:convert';
-import 'utils/utils.dart';
-import 'package:dream_work/dream_connector/dream_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:rxdart/rxdart.dart';
+import 'utils/utils.dart';
+import 'dream_core.dart';
+import 'dart:convert';
 
-/// easy auth with backend
+/// Easy use auth
 class DreamAuth {
+  // singleton
   static final DreamAuth instance = DreamAuth._internal();
-  late DreamCore _dreamCore;
-
-  String? _authToken; // auth infomation
   DreamAuth._internal(); // private constructor
+  factory DreamAuth() {
+    return DreamAuth._internal();
+  }
 
+  // core of the dream connector
+  late DreamCore _dreamCore;
+  // auth infomation
+  String? _authToken;
+
+  /// Stream of user information
+  /// - username
+  /// - name
+  /// - email
+  /// - iat
+  final BehaviorSubject _authStateStream =
+      BehaviorSubject<Map<String, dynamic>?>.seeded(null);
+
+  /// Stream of [bool]
+  final BehaviorSubject _isLoadingStream = BehaviorSubject<bool>.seeded(false);
+
+  /// setter for [_dreamCore]
   set dreamCore(DreamCore _dreamCore) {
     this._dreamCore = _dreamCore;
   }
 
-  final BehaviorSubject _authStateStream =
-      BehaviorSubject<Map<String, dynamic>?>.seeded(null);
-
-  final BehaviorSubject _isLoading = BehaviorSubject<bool>.seeded(false);
-
-  /// Return the user information in the authtoken
+  /// getter for [_authStateStream]
+  /// Return a stream of user information
   /// - username
   /// - name
   /// - email
   /// - iat
   get authState => _authStateStream;
 
-  get isLoading => _isLoading;
+  /// getter for [_isLoadingStream]
+  /// return a stream of [bool]
+  get isLoading => _isLoadingStream;
 
+  // todo update authThoken with new token
+  /// getter for [auth]
   get authToekn {
-    if (_authToken == null) {
-      throw Exception('AuthToken is null');
-    }
-
-    if (kDebugMode) {
-      print('dreamAuth_authToken: $_authToken');
-    }
-
+    _authToken == null ? throw Exception('AuthToken is null') : null;
+    logger('dreamAuth_authToken: $_authToken');
     return json.decode(_authToken!)['accessToken'];
   }
 
   /// Attmpts to logout
   Future logout() async {
-    _isLoading.add(true);
-    _authToken = null;
-    Map<String, dynamic>? empty;
-    _authStateStream.add(empty);
-    _isLoading.add(false);
+    loading(() async {
+      await _dreamCore.close();
+      _authToken = null;
+      Map<String, dynamic>? empty;
+      _authStateStream.add(empty);
+      logger('dreamAuth_logout: success');
+    });
   }
 
   /// Attempts to register a user with the given email address password and optional username.
@@ -63,28 +75,23 @@ class DreamAuth {
     required String email,
     required String password,
   }) async {
-    _isLoading.add(true);
-    const Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    final String body = jsonEncode({
-      'username': userName ?? email,
-      'email': email,
-      'password': password,
+    loading(() async {
+      final Map<String, String> headers = headerResolver();
+      final String body = jsonEncode({
+        'username': userName ?? email,
+        'email': email,
+        'password': password,
+      });
+
+      logger('dreamAuth_createUserWithEmailAndPassword: $body');
+
+      await post(
+          path: Path.register,
+          headers: headers,
+          body: body,
+          dreamCore: _dreamCore);
+      await loginWithEmailAndPassword(email: email, password: password);
     });
-
-    if (kDebugMode) {
-      print('dreamAuth_createUserWithEmailAndPassword: $body');
-    }
-
-    await post(
-        path: Path.register,
-        headers: headers,
-        body: body,
-        dreamCore: _dreamCore);
-    await loginWithEmailAndPassword(email: email, password: password);
-    _isLoading.add(false);
   }
 
   /// Attempts to sign in a user with the given email address and password.
@@ -96,27 +103,27 @@ class DreamAuth {
     required String email,
     required String password,
   }) async {
-    _isLoading.add(true);
-    const Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    final String body = jsonEncode({
-      'email': email,
-      'password': password,
+    loading(() async {
+      final Map<String, String> headers = headerResolver();
+      final String body = jsonEncode({
+        'email': email,
+        'password': password,
+      });
+
+      logger('dreamAuth_loginWithEmailAndPassword: $body');
+
+      _authToken = await post(
+          path: Path.login,
+          headers: headers,
+          body: body,
+          dreamCore: _dreamCore);
+      _authStateStream.add(Jwt.parseJwt(_authToken!));
     });
-
-    if (kDebugMode) {
-      print('dreamAuth_loginWithEmailAndPassword: $body');
-    }
-
-    _authToken = await post(
-        path: Path.login, headers: headers, body: body, dreamCore: _dreamCore);
-    _authStateStream.add(Jwt.parseJwt(_authToken!));
-    _isLoading.add(false);
   }
 
-  factory DreamAuth() {
-    return DreamAuth._internal();
+  Future loading(Function callBack) async {
+    _isLoadingStream.add(true);
+    await callBack();
+    _isLoadingStream.add(false);
   }
 }
