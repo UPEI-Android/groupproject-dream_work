@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../dream_connector/dream_connector.dart';
-import '../screens/screens.dart';
+import '../../dream_connector/dream_connector.dart';
+import '../../screens/screens.dart';
 
 class Profile extends StatelessWidget {
   const Profile({

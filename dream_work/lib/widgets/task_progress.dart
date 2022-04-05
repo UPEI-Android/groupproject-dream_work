@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Progerss extends StatelessWidget {
-  const Progerss({Key? key, this.precent = 0}) : super(key: key);
+class TaskProgerss extends StatelessWidget {
+  const TaskProgerss({Key? key, this.precent = 0}) : super(key: key);
   final double precent;
 
   @override

@@ -1,14 +1,18 @@
+import 'package:rxdart/rxdart.dart';
+import 'dream_connector.dart';
+import 'utils/utils.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'utils/utils.dart';
-import 'package:flutter/foundation.dart';
-import 'package:rxdart/rxdart.dart';
-import 'dream_auth.dart';
-import 'dream_core.dart';
 
 class DreamDatabase {
+  // singleton
   static final DreamDatabase instance = DreamDatabase._internal();
+  DreamDatabase._internal();
+  factory DreamDatabase() {
+    return instance;
+  }
 
+  /// core of the dream connector
   late DreamCore _dreamCore;
 
   // streams
@@ -56,23 +60,36 @@ class DreamDatabase {
   }
 
   // todo
-  disconnect() {
+  Future disconnect() async {
     //_databaseStream.close();
   }
 
-  // methods use read from database
+  /// Write one task item to server
+  Future<void> writeOne(Map<String, dynamic> item) async {
+    await _writeToDatabase(path: Path.all, items: [item])
+        .then((value) => _readFromDatabaseAllItem());
+  }
 
-  /// Read all the todoitems belong to the user
+  /// Write all task items to server
+  Future<void> writeAll(List<Map<String, dynamic>> items) async {
+    await _writeToDatabase(path: Path.all, items: items)
+        .then((value) => _readFromDatabaseAllItem());
+  }
+
+  /// Read all the task item belong to the user
+  /// and update the stream
   Future<void> _readFromDatabaseAllItem() async {
-    final List<Map<String, dynamic>>? data =
-        await _readFromDatabase(Path.all).catchError((e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    });
+    final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
     _databaseStream.add(data);
   }
 
+  /// Delete all the task item belong to user
+  Future deleteAll() async {
+    await _deleteFromDatabase(path: Path.all)
+        .then((value) => _readFromDatabaseAllItem());
+  }
+
+  /// Read task items from server
   Future<List<Map<String, dynamic>>?> _readFromDatabase(
     Path path,
   ) async {
@@ -86,72 +103,39 @@ class DreamDatabase {
     ).getResult();
   }
 
-  // methods use to write to database
-
-  Future<void> writeOne(Map<String, dynamic> item) async {
-    await _writeToDatabase(path: Path.all, items: [item])
-        .then((value) => _readFromDatabaseAllItem());
-  }
-
-  Future<void> writeAll(List<Map<String, dynamic>> items) async {
-    await _writeToDatabase(path: Path.all, items: items)
-        .then((value) => _readFromDatabaseAllItem());
-  }
-
-  Future<void> _writeToDatabase({
+  /// Write task items to server
+  Future _writeToDatabase({
     required Path path,
     required List<Map<String, dynamic>> items,
   }) async {
     loadingState.add(true);
     final authToken = await DreamAuth.instance.authToekn;
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'authorization': authToken,
-    };
+    final Map<String, String> headers = headerResolver(authToken);
+    // request body
     final String body = jsonEncode(items);
 
-    if (kDebugMode) {
-      print('_writeToDatabase: ${body.toString().split(":").first}');
-    }
+    logger('_writeToDatabase: ${body.toString().split(":").first}');
 
     await post(path: path, headers: headers, body: body, dreamCore: _dreamCore)
         .catchError((e) => throw Exception('faild to write to database: $e'));
     loadingState.add(false);
   }
 
-  // method use to delete one item
-
-  Future<void> deleteAll() async {
-    await _deleteFromDatabase(path: Path.all)
-        .then((value) => _readFromDatabaseAllItem());
-  }
-
+  /// Delete task items from server
   Future<void> _deleteFromDatabase({
     required Path path,
   }) async {
     loadingState.add(true);
     final authToken = await DreamAuth.instance.authToekn;
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'authorization': authToken,
-    };
+    final Map<String, String> headers = headerResolver(authToken);
+    // todo change this request body
     final String body = jsonEncode([]);
 
-    if (kDebugMode) {
-      print('_delete: ${body.toString().split(":").first}');
-    }
+    logger('_delete: ${body.toString().split(":").first}');
 
     await delete(
             path: path, headers: headers, body: body, dreamCore: _dreamCore)
         .catchError((e) => throw Exception('faild to delete: $e'));
     loadingState.add(false);
-  }
-
-  DreamDatabase._internal();
-
-  factory DreamDatabase() {
-    return instance;
   }
 }
