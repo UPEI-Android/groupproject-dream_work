@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../dream_connector/dream_connector.dart';
-import '../screens/home_screen.dart';
+import '../../dream_connector/dream_connector.dart';
+import '../../screens/home_screen.dart';
 
 class UserAuth extends StatefulWidget {
   const UserAuth({Key? key}) : super(key: key);

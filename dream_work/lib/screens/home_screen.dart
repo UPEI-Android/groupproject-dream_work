@@ -86,8 +86,8 @@ class _HomeScreenState extends State<HomeScreen>
                 padding: const EdgeInsets.all(5.0),
                 child: StreamBuilder(
                   stream: DreamDatabase.instance.connectedState,
-                  builder: (context, AsyncSnapshot snapshot) {
-                    return snapshot.data || snapshot.data != null
+                  builder: (context, AsyncSnapshot snap) {
+                    return snap.data ?? true
                         ? const Icon(Icons.cloud_circle, color: Colors.green)
                         : const Icon(Icons.cloud_circle, color: Colors.red);
                   },
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen>
               return AddButton(
                 isLoading: snap.data ?? true,
                 onPressed: () {
-                  createIndividualItem(section: (DateTime.now()).toString());
+                  createTask(section: (DateTime.now()).toString());
                 },
               );
             },

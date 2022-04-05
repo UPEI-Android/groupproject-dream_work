@@ -1,4 +1,4 @@
-import 'package:dream_work/widgets/userauth.dart';
+import 'package:dream_work/widgets/form/userauth_form.dart';
 import 'package:flutter/material.dart';
 import '../dream_connector/dream_connector.dart';
 import '../widgets/widgets.dart';
@@ -121,7 +121,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           stream: DreamAuth.instance.isLoading,
                           builder: (context, AsyncSnapshot snap) {
                             return Text(
-                              snap.data || !snap.hasData
+                              snap.data == null || !snap.hasData
                                   ? 'Connecting..'
                                   : "Connect",
                               style: const TextStyle(

@@ -3,7 +3,7 @@ import 'dart:math';
 import '../dream_connector/dream_connector.dart';
 
 /// create a new individual todo item
-createIndividualItem({required String section}) async {
+createTask({required String section}) async {
   // todo: give them real values
   final bool isDone = Random().nextBool();
   // get a random number
@@ -21,4 +21,4 @@ createIndividualItem({required String section}) async {
   await DreamDatabase.instance.writeOne(map);
 }
 
-editIndividualItem({required bool isDone}) async {}
+editTask({required bool isDone}) async {}

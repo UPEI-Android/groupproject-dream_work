@@ -26,6 +26,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
     );
   }
 
+  /// appbar of the individual screen
   PreferredSizeWidget _appBar() => AppBar(
         elevation: 12,
         actions: [
@@ -57,13 +58,14 @@ class _IndividualScreenState extends State<IndividualScreen> {
               color: Colors.red,
             ),
           ),
+          // disply the loading state
           StreamBuilder(
             stream: DreamDatabase.instance.loadingState,
             builder: (context, AsyncSnapshot snap) {
               return AddButton(
                 isLoading: snap.data ?? true,
                 onPressed: () {
-                  createIndividualItem(section: section);
+                  createTask(section: section);
                 },
               );
             },
@@ -71,25 +73,22 @@ class _IndividualScreenState extends State<IndividualScreen> {
         ],
       );
 
+  /// build a list of [TaskTag]
   Widget todoList() => StreamBuilder(
         stream: DreamDatabase.instance.allItem,
         builder: (BuildContext context, AsyncSnapshot snap) {
-          List<dynamic> list = [];
-          double finshPrecentage = 0;
-
-          if (snap.data != null) {
-            list = snap.data.where((e) => e['section'] == section).toList();
-            finshPrecentage = snap.data
-                    .where((element) => element['section'] == section)
-                    .map((element) => element['isDone'].toString())
-                    .toList()
-                    .where((element) => element == 'true')
-                    .length /
-                snap.data
-                    .where((element) => element['section'] == section)
-                    .length;
+          if (snap.data == null) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.greenAccent,
+              ),
+            );
           }
 
+          List<dynamic> taskList =
+              findItemsBySecion(sourceData: snap.data, section: section);
+          double finshPrecentage = findFinishPrecentageBySection(
+              sourceData: snap.data, section: section);
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -97,64 +96,57 @@ class _IndividualScreenState extends State<IndividualScreen> {
                 title: section,
                 isDone: false,
                 height: 100,
-                widget: Progerss(precent: finshPrecentage),
+                widget: TaskProgerss(precent: finshPrecentage),
               ),
-              snap.data != null
-                  ? Expanded(
-                      child: ListView.builder(
-                        itemCount: list.length,
-                        itemBuilder: (context, index) => TodoTag(
-                          prop: list[index],
-                        ),
-                      ),
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.greenAccent,
-                      ),
-                    ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: taskList.length,
+                  itemBuilder: (context, index) => TaskTag(
+                    prop: taskList[index],
+                  ),
+                ),
+              )
             ],
           );
         },
       );
 }
 
-class TodoTag extends StatelessWidget {
-  const TodoTag({Key? key, this.prop}) : super(key: key);
-  final prop; //TODO give this a type
+/// cutomized [Tag] for individual screen
+class TaskTag extends StatelessWidget {
+  const TaskTag({Key? key, this.prop}) : super(key: key);
+  final dynamic prop;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 6),
-      child: Slidable(
-          startActionPane: ActionPane(
-            motion: const ScrollMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) {
-                  // todo add a real action
-                },
-                backgroundColor: const Color(0xFFFE4A49),
-                foregroundColor: Colors.white,
-                icon: Icons.delete,
-                label: 'Delete',
-              ),
-              SlidableAction(
-                onPressed: (context) {
-                  // todo add a real action
-                },
-                backgroundColor: const Color(0xFF21B7CA),
-                foregroundColor: Colors.white,
-                icon: Icons.share,
-                label: 'Share',
-              ),
-            ],
+    return Slidable(
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              // todo add a real action
+            },
+            backgroundColor: const Color(0xFFFE4A49),
+            foregroundColor: Colors.white,
+            icon: Icons.delete,
+            label: 'Delete',
           ),
-          child: Tag(
-            title: prop['tid'],
-            isDone: prop['isDone'],
-          )),
+          SlidableAction(
+            onPressed: (context) {
+              // todo add a real action
+            },
+            backgroundColor: const Color(0xFF21B7CA),
+            foregroundColor: Colors.white,
+            icon: Icons.share,
+            label: 'Share',
+          ),
+        ],
+      ),
+      child: Tag(
+        title: prop['tid'],
+        isDone: prop['isDone'],
+      ),
     );
   }
 }
