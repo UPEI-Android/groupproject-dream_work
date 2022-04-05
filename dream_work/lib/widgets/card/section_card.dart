@@ -34,16 +34,44 @@ class SectionCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 30.0),
-          child: Text(
-            titleAdj,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+            padding: const EdgeInsets.only(left: 30.0),
+            child: Text(
+              titleAdj,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            )),
         child ?? Container(),
       ],
+    );
+  }
+}
+
+class EditableSectionCard extends StatelessWidget {
+  const EditableSectionCard({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        child: TextField(
+          textInputAction: TextInputAction.done,
+          keyboardType: TextInputType.text,
+          style: const TextStyle(color: Colors.white, fontSize: 17),
+          onSubmitted: (value) {
+            // todo : update the value to the database
+            print(value);
+          },
+          decoration: InputDecoration(
+            hintText: title,
+            hintStyle: const TextStyle(color: Colors.grey),
+            border: InputBorder.none,
+          ),
+        ),
+      ),
     );
   }
 }
