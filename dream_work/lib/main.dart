@@ -1,4 +1,6 @@
+import 'package:dream_work/screens/calendar_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'screens/screens.dart';
 
 void main() {
@@ -8,7 +10,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,8 +21,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: colorCustom,
         fontFamily: 'Nunito',
       ),
-      initialRoute: AuthScreen.routeName,
+      initialRoute: CalendarScreen.routeName,
       routes: {
+        CalendarScreen.routeName: (context) => const CalendarScreen(),
         AuthScreen.routeName: (context) => const AuthScreen(),
         HomeScreen.routeName: (context) => const HomeScreen(),
         IndividualScreen.routeName: (context) => const IndividualScreen(),

@@ -48,7 +48,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Warining'),
+                  title: const Text('Warning'),
                   content: const Text('Are You sure you want to delete?'),
                   actions: [
                     TextButton(
@@ -71,7 +71,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
               color: Colors.red,
             ),
           ),
-          // disply the loading state
+          // display the loading state
           StreamBuilder(
             stream: DreamDatabase.instance.loadingState,
             builder: (context, AsyncSnapshot snap) {
@@ -100,7 +100,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
 
           List<dynamic> taskList =
               findItemsBySecion(sourceData: snap.data, section: section);
-          double sectionFinishedPercentage = findFinishPrecentageBySection(
+          double sectionFinishedPercentage = findFinishPercentageBySection(
               sourceData: snap.data, section: section);
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -6,8 +6,8 @@ List<dynamic> findItemsBySecion({
   return sourceData.where((e) => e['section'] == section).toList();
 }
 
-/// calculate the precentage off finished task in this section.
-double findFinishPrecentageBySection({
+/// calculate the percentage off finished task in this section.
+double findFinishPercentageBySection({
   required dynamic sourceData,
   required String section,
 }) {
