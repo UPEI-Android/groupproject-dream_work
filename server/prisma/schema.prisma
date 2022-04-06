@@ -34,7 +34,6 @@ model group {
 
 model user {
   email      String   @id @unique
-  username   String   @unique
   name       String   
   password   String
 }

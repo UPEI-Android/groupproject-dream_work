@@ -18,35 +18,32 @@ export default nc<NextApiRequest, NextApiResponse>({
 
 .post(async (req : NextApiRequest, res : NextApiResponse) => {
     // Authenticate the user
-    const { username, email, password } : user = req.body
-    console.log('login attempt:', username ?? email)
-    if(!((username || email) && password)) return res.status(400).json({ error: 'No username or password provided' })
+    const { email, password } : user = req.body
+    console.log('login attempt:',  email)
+    if(!(email && password)) return res.status(400).json({ error: 'No username or password provided' })
     
     let data = await dbclient.user.findFirst({
-        where: {
-            OR: [
-                {
-                    username: username,
-                },
-                {
-                    email: email,
-                }
-            ],
+        // where: {
+        //     OR: [
+        //         {
+        //             username: username,
+        //         },
+        //         {
+        //             email: email,
+        //         }
+        //     ],
+            where: {
+                email: email,
+            }
         },
-        select: {
-            username: true,
-            name: true,
-            email: true,
-            password: true,
-        }
-    })
+    )
 
     if(data == null) return res.status(400).json({ error: 'No such user'});
 
     if(data.password !== password) return res.status(400).json({ error: 'Wrong password'});
 
     // Create a token
-    const accessToken = jwt.sign({name: data.username, email: data.email}, process.env.ACCESS_TOKEN_SECRET as string)
+    const accessToken = jwt.sign({name: data.name, email: data.email}, process.env.ACCESS_TOKEN_SECRET as string)
     // authenticate seccess
     res.status(200).json({ accessToken: accessToken })
 })
