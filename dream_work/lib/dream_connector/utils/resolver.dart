@@ -27,10 +27,10 @@ Future<Uri> pathResolver({
       _path = '/api/auth/logout';
       break;
     case Path.all:
-      _path = '/api/todos';
+      _path = '/api/tasks';
       break;
     case Path.single:
-      _path = '/api/todos/';
+      _path = '/api/tasks/';
       break;
   }
   final serverUrl = await dreamCore.coreState();
