@@ -1,5 +1,5 @@
+import 'package:dream_work/router.dart';
 import 'package:flutter/material.dart';
-import 'screens/screens.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,20 +12,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Dream Work',
-      theme: ThemeData(
-        primarySwatch: colorCustom,
-        scaffoldBackgroundColor: colorCustom,
-        fontFamily: 'Nunito',
-      ),
-      initialRoute: AuthScreen.routeName,
-      routes: {
-        AuthScreen.routeName: (context) => const AuthScreen(),
-        HomeScreen.routeName: (context) => const HomeScreen(),
-        IndividualScreen.routeName: (context) => const IndividualScreen(),
-      },
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Dream Work',
+        theme: ThemeData(
+          primarySwatch: colorCustom,
+          scaffoldBackgroundColor: colorCustom,
+          fontFamily: 'Nunito',
+        ),
+        initialRoute: Routing.auth,
+        routes: Routing.router());
   }
 }
 

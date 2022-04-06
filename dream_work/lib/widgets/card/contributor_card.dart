@@ -19,7 +19,7 @@ class Contributors extends StatelessWidget {
           _monthText(1),
           _monthText(2),
           StreamBuilder(
-            stream: DreamDatabase.instance.allItem,
+            stream: DreamDatabase.instance.items,
             builder: (context, AsyncSnapshot snap) {
               if (snap.data == null) {
                 return const Center(

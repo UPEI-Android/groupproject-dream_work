@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
-import '../../screens/home_screen.dart';
+import '../../router.dart';
 
 class UserAuth extends StatefulWidget {
   const UserAuth({Key? key}) : super(key: key);
@@ -155,9 +155,9 @@ class _UserAuthState extends State<UserAuth> {
     await fn.then(
       (value) {
         _setError();
-        Navigator.pushNamed(
+        Navigator.pushReplacementNamed(
           context,
-          HomeScreen.routeName,
+          Routing.home,
         );
       },
     ).catchError(

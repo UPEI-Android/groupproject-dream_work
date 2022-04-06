@@ -35,7 +35,7 @@ Future<String> editSectionTitle({
   required String oldTitle,
 }) async {
   // find all the element with the old title and change it to the new title
-  var data = await DreamDatabase.instance.allItem;
+  var data = await DreamDatabase.instance.items;
 
   final List<Map<String, dynamic>> newSection =
       List.from(data.value.where((e) => e['section'] == oldTitle).toList());
@@ -45,7 +45,7 @@ Future<String> editSectionTitle({
     element['section'] = newTitle;
   }
 
-  await DreamDatabase.instance.writeAll(newSection);
+  await DreamDatabase.instance.writeMany(newSection);
   return newTitle;
 }
 
@@ -53,7 +53,7 @@ Future<String> editSectionTitle({
 Future deleteSectionWithTitle({
   required String title,
 }) async {
-  var data = await DreamDatabase.instance.allItem;
+  var data = await DreamDatabase.instance.items;
   await data.value.where((e) => e['section'] == title).forEach(
         (e) async => await DreamDatabase.instance.deleteOne(tid: e['tid']),
       );

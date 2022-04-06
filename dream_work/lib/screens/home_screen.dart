@@ -1,12 +1,13 @@
 // ignore_for_file: constant_identifier_names
 import '../dream_connector/dream_connector.dart';
 import 'package:flutter/material.dart';
+import '../router.dart';
 import '../widgets/widgets.dart';
 import '../utils/utils.dart';
+import 'auth_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-  static const routeName = '/home';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     DreamDatabase.instance.connect();
+
     return Scaffold(
       appBar: _appbar(context),
       body: SizedBox(
@@ -71,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen>
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: StreamBuilder(
-                  stream: DreamDatabase.instance.connectedState,
+                  stream: DreamDatabase.instance.connectState,
                   builder: (context, AsyncSnapshot snap) {
                     if (snap.data == null) {
                       return const Icon(

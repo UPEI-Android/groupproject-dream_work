@@ -72,6 +72,7 @@ class DreamAuth {
     required String password,
   }) async {
     final Map<String, String> headers = headerResolver();
+    name ??= email;
     final String body = jsonEncode({
       'name': name,
       'email': email,

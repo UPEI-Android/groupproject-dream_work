@@ -2,7 +2,7 @@ import 'package:dream_work/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_work/widgets/widgets.dart';
 
-import '../../screens/screens.dart';
+import '../../router.dart';
 
 class SectionCard extends StatelessWidget {
   const SectionCard({
@@ -83,7 +83,7 @@ class _EditableSectionCardState extends State<EditableSectionCard> {
             Navigator.pop(context);
             Navigator.pushNamed(
               context,
-              IndividualScreen.routeName,
+              Routing.individual,
               arguments: newTitle,
             );
           },

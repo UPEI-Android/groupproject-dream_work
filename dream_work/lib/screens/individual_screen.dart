@@ -1,5 +1,6 @@
+import 'package:dream_work/router.dart';
+
 import '../dream_connector/dream_connector.dart';
-import 'package:dream_work/screens/screens.dart';
 import 'package:flutter/material.dart';
 import '../widgets/widgets.dart';
 import '../utils/utils.dart';
@@ -8,7 +9,6 @@ class IndividualScreen extends StatefulWidget {
   const IndividualScreen({
     Key? key,
   }) : super(key: key);
-  static const routeName = '/individual';
 
   @override
   State<IndividualScreen> createState() => _IndividualScreenState();
@@ -42,7 +42,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                       child: const Text('Yes'),
                       onPressed: () async {
                         await deleteSectionWithTitle(title: section);
-                        Navigator.pushNamed(context, HomeScreen.routeName);
+                        Navigator.pushNamed(context, Routing.home);
                       },
                     ),
                     TextButton(
@@ -75,7 +75,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
 
   /// build a list of [TaskTag]
   Widget todoList() => StreamBuilder(
-        stream: DreamDatabase.instance.allItem,
+        stream: DreamDatabase.instance.items,
         builder: (BuildContext context, AsyncSnapshot snap) {
           if (snap.data == null) {
             return const Center(
