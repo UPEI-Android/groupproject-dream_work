@@ -53,5 +53,6 @@ Future deleteSectionWithTitle({
 }) async {
   var data = await DreamDatabase.instance.allItem;
   data.value.where((e) => e['section'] == title).forEach(
-      (e) async => await DreamDatabase.instance.deleteOne(tid: e['tid']));
+        (e) async => await DreamDatabase.instance.deleteOne(tid: e['tid']),
+      );
 }

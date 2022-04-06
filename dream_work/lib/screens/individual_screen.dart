@@ -16,19 +16,6 @@ class IndividualScreen extends StatefulWidget {
 
 class _IndividualScreenState extends State<IndividualScreen> {
   late String section;
-  late final TextEditingController _title;
-
-  @override
-  void initState() {
-    super.initState();
-    _title = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _title.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

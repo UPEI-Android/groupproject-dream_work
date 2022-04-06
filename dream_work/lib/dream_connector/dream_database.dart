@@ -89,25 +89,30 @@ class DreamDatabase {
   }
 
   /// Delete one task item from server
-  Future deleteOne({required String tid}) async {
+  Future deleteOne({required String tid, bool? refresh}) async {
     await _deleteFromDatabase(path: Path.single, tid: tid)
-        .then((value) => _readFromDatabaseAllItem());
+        .then((value) => refresh ?? _readFromDatabaseAllItem());
   }
 
   /// Read all the task item belong to the user
   /// and update the stream
   Future _readFromDatabaseAllItem() async {
-    final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
-    _databaseCache = data ?? [];
-    _databaseCache.sort((a, b) {
-      if (a['due_at'] == null && b['due_at'] == null) {
-        return 0;
-      }
-      return 1;
+    await _readFromDatabase(Path.all).then((value) {
+      _databaseCache == value;
+      _databaseCache.sort(
+        (a, b) {
+          if (int.parse(a['tid']) > int.parse(b['tid'])) {
+            return 1;
+          }
+          return 0;
+        },
+      );
+      _databaseStream.add(_databaseCache);
     });
-    _databaseStream.add(_databaseCache);
   }
 
+  /// edit one task item
+  /// todo replace the http method to PUT
   Future editOne({
     required String tid,
     String? section,
