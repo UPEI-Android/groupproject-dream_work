@@ -1,3 +1,4 @@
+import 'package:dream_work/routes/route_generator.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
 import '../../screens/screens.dart';
@@ -6,7 +7,7 @@ import '../widgets.dart';
 
 class TeamTab extends StatelessWidget {
   const TeamTab({Key? key}) : super(key: key);
-  static const routeName = '/team';
+  //static const routeName = '/team';
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class TeamTab extends StatelessWidget {
                 precent: sectionFinishedPercentage[sections[index]] ?? 0),
             onTap: () => Navigator.pushNamed(
               context,
-              IndividualScreen.routeName,
+              RouteGenerator.individualScreen,
               arguments: sections[index],
             ),
           ),

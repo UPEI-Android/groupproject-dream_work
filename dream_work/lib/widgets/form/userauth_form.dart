@@ -1,3 +1,4 @@
+import 'package:dream_work/routes/route_generator.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
 import '../../screens/home_screen.dart';
@@ -155,7 +156,7 @@ class _UserAuthState extends State<UserAuth> {
         _setError();
         Navigator.pushNamed(
           context,
-          HomeScreen.routeName,
+          RouteGenerator.homeScreen,
         );
       },
     ).catchError(

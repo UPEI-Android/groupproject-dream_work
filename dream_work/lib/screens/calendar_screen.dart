@@ -4,9 +4,6 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
-  static const routeName = '/calendar';
-
-
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -18,16 +15,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay =  DateTime.now();
 
-  @override
-  void initState() {
-    super.initState();
-    initialization();
-  }
-  Future<void> initialization() async {
-
-    await Future.delayed(const Duration(seconds: 3));
-    FlutterNativeSplash.remove();
-  }
 
   @override
   Widget build(BuildContext context) {

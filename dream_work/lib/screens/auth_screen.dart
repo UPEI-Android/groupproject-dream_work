@@ -1,11 +1,12 @@
 import 'package:dream_work/widgets/form/userauth_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import '../dream_connector/dream_connector.dart';
 import '../widgets/widgets.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
-  static const routeName = '/welcome';
+
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -17,6 +18,9 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isHttps = true;
   bool _isServerConnected = false;
   String? _error;
+
+
+
 
   void _setserverError([String? error]) {
     setState(() {
@@ -33,9 +37,15 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    initialization();
     _server = TextEditingController();
   }
 
+  Future<void> initialization() async {
+
+    await Future.delayed(const Duration(seconds: 1));
+    FlutterNativeSplash.remove();
+  }
   @override
   void dispose() {
     _server.dispose();

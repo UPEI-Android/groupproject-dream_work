@@ -1,3 +1,4 @@
+import 'package:dream_work/routes/route_generator.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
 import '../../screens/screens.dart';
@@ -31,7 +32,7 @@ class ProfileCard extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () async {
                       await DreamAuth.instance.logout();
-                      Navigator.pushNamed(context, AuthScreen.routeName);
+                      Navigator.pushNamed(context, RouteGenerator.authScreen);
                     },
                     child: const Text('Logout'),
                     style: ElevatedButton.styleFrom(primary: Colors.red),

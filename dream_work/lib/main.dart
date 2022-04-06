@@ -1,3 +1,4 @@
+import 'package:dream_work/routes/route_generator.dart';
 import 'package:dream_work/screens/calendar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -24,13 +25,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: colorCustom,
         fontFamily: 'Nunito',
       ),
-      initialRoute: CalendarScreen.routeName,
-      routes: {
-        CalendarScreen.routeName: (context) => const CalendarScreen(),
-        AuthScreen.routeName: (context) => const AuthScreen(),
-        HomeScreen.routeName: (context) => const HomeScreen(),
-        IndividualScreen.routeName: (context) => const IndividualScreen(),
-      },
+      initialRoute: RouteGenerator.authScreen,
     );
   }
 }
