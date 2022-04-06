@@ -2,6 +2,7 @@ import 'package:dream_work/router.dart';
 
 import '../dream_connector/dream_connector.dart';
 import 'package:flutter/material.dart';
+import '../routes/route_generator.dart';
 import '../widgets/widgets.dart';
 import '../utils/utils.dart';
 
@@ -35,12 +36,13 @@ class _IndividualScreenState extends State<IndividualScreen> {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Warining'),
+                  title: const Text('Warning'),
                   content: const Text('Are You sure you want to delete?'),
                   actions: [
                     TextButton(
                       child: const Text('Yes'),
                       onPressed: () async {
+
                         await deleteSectionWithTitle(title: section);
                         Navigator.pushNamed(context, Routing.home);
                       },
@@ -58,7 +60,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
               color: Colors.red,
             ),
           ),
-          // disply the loading state
+          // display the loading state
           StreamBuilder(
             stream: DreamDatabase.instance.loadingState,
             builder: (context, AsyncSnapshot snap) {
@@ -87,7 +89,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
 
           List<dynamic> taskList =
               findItemsBySecion(sourceData: snap.data, section: section);
-          double sectionFinishedPercentage = findFinishPrecentageBySection(
+          double sectionFinishedPercentage = findFinishPercentageBySection(
               sourceData: snap.data, section: section);
           return Column(
             children: [

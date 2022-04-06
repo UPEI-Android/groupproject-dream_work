@@ -1,3 +1,4 @@
+import 'package:dream_work/routes/route_generator.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
 import '../../router.dart';
@@ -6,7 +7,7 @@ import '../widgets.dart';
 
 class TeamTab extends StatelessWidget {
   const TeamTab({Key? key}) : super(key: key);
-  static const routeName = '/team';
+  //static const routeName = '/team';
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class TeamTab extends StatelessWidget {
         final Map<String, double> sectionFinishedPercentage = {};
         for (final String section in sections) {
           sectionFinishedPercentage.addEntries(<String, double>{
-            section: findFinishPrecentageBySection(
+            section: findFinishPercentageBySection(
                 section: section, sourceData: snap.data)
           }.entries);
         }
