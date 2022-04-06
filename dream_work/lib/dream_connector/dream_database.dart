@@ -16,6 +16,9 @@ class DreamDatabase {
   // using a dummy core to avoid null pointer exception
   DreamCore _dreamCore = DreamCore.dummyCore();
 
+  // cache of the database
+  List<Map<String, dynamic>> _databaseCache = [];
+
   // streams
   final BehaviorSubject<List<Map<String, dynamic>>?> _databaseStream =
       BehaviorSubject<List<Map<String, dynamic>>?>.seeded(null);
@@ -62,6 +65,7 @@ class DreamDatabase {
 
   void disconnect() async {
     List<Map<String, dynamic>>? empty;
+    _databaseCache = [];
     _databaseStream.add(empty);
     _isConnectedStream.add(false);
   }
@@ -82,7 +86,8 @@ class DreamDatabase {
   /// and update the stream
   Future _readFromDatabaseAllItem() async {
     final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
-    _databaseStream.add(data);
+    _databaseCache = data ?? [];
+    _databaseStream.add(_databaseCache);
   }
 
   /// Delete all the task item belong to user
