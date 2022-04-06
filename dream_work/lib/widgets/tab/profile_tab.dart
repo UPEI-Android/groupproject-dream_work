@@ -17,15 +17,12 @@ class _ProfileTabState extends State<ProfileTab> {
     return ListView(
       children: [
         _authTag(),
-        _divider(),
         const GeneralCard(
           height: 200,
         ),
-        _divider(),
         const GeneralCard(
           height: 200,
         ),
-        _divider(),
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'package:dream_work/routes/route_generator.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
-import '../../screens/home_screen.dart';
+import '../../router.dart';
 
 class UserAuth extends StatefulWidget {
   const UserAuth({Key? key}) : super(key: key);
@@ -130,7 +130,7 @@ class _UserAuthState extends State<UserAuth> {
           _setLoading(true);
           final String email = _email.text;
           final String password = _password.text;
-          await _sentForm(email, password, _error != 'No such user')
+          await _sentForm(email, password, _error != 'No such user', _name.text)
               .then((value) {
             _setLoading(false);
             _email.clear();
@@ -140,13 +140,15 @@ class _UserAuthState extends State<UserAuth> {
         },
       );
 
-  Future<void> _sentForm(String email, String password, bool isSign) async {
+  Future<void> _sentForm(String email, String password, bool isSign,
+      [String? name]) async {
     final fn = isSign
         ? DreamAuth.instance.loginWithEmailAndPassword(
             email: email,
             password: password,
           )
         : DreamAuth.instance.createUserWithEmailAndPassword(
+            name: name ?? email,
             email: email,
             password: password,
           );
@@ -154,9 +156,9 @@ class _UserAuthState extends State<UserAuth> {
     await fn.then(
       (value) {
         _setError();
-        Navigator.pushNamed(
+        Navigator.pushReplacementNamed(
           context,
-          RouteGenerator.homeScreen,
+          Routing.home,
         );
       },
     ).catchError(

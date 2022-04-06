@@ -1,5 +1,8 @@
+import 'package:dream_work/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_work/widgets/widgets.dart';
+
+import '../../router.dart';
 
 class SectionCard extends StatelessWidget {
   const SectionCard({
@@ -47,29 +50,43 @@ class SectionCard extends StatelessWidget {
   }
 }
 
-class EditableSectionCard extends StatelessWidget {
+class EditableSectionCard extends StatefulWidget {
   const EditableSectionCard({Key? key, required this.title}) : super(key: key);
-
   final String title;
 
   @override
+  State<EditableSectionCard> createState() => _EditableSectionCardState();
+}
+
+class _EditableSectionCardState extends State<EditableSectionCard> {
+  final TextEditingController _text = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    _text.text = widget.title;
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
         child: TextField(
+          controller: _text,
           textInputAction: TextInputAction.done,
           keyboardType: TextInputType.text,
           style: const TextStyle(color: Colors.white, fontSize: 17),
-          onSubmitted: (value) {
-            // todo : update the value to the database
-            print(value);
-          },
-          decoration: InputDecoration(
-            hintText: title,
-            hintStyle: const TextStyle(color: Colors.grey),
+          decoration: const InputDecoration(
+            hintText: 'Enter Section Title',
+            hintStyle: TextStyle(color: Colors.grey),
             border: InputBorder.none,
           ),
+          onSubmitted: (value) async {
+            final newTitle =
+                await editSectionTitle(newTitle: value, oldTitle: widget.title);
+
+            Navigator.pushReplacementNamed(
+              context,
+              Routing.individual,
+              arguments: newTitle,
+            );
+          },
         ),
       ),
     );

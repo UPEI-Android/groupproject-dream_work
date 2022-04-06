@@ -1,9 +1,5 @@
-import 'package:dream_work/routes/route_generator.dart';
-import 'package:dream_work/screens/calendar_screen.dart';
+import 'package:dream_work/router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'screens/screens.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -18,15 +14,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Dream Work',
-      theme: ThemeData(
-        primarySwatch: colorCustom,
-        scaffoldBackgroundColor: colorCustom,
-        fontFamily: 'Nunito',
-      ),
-      initialRoute: RouteGenerator.authScreen,
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Dream Work',
+        theme: ThemeData(
+          primarySwatch: colorCustom,
+          scaffoldBackgroundColor: colorCustom,
+          fontFamily: 'Nunito',
+        ),
+        initialRoute: Routing.auth,
+        routes: Routing.router());
   }
 }
 

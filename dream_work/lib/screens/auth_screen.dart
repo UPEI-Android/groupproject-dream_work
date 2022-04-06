@@ -7,7 +7,6 @@ import '../widgets/widgets.dart';
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
 
-
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
@@ -150,11 +149,12 @@ class _AuthScreenState extends State<AuthScreen> {
 
                         try {
                           serverUrl = _server.text.split(':')[0];
-                          port = serverUrl.split(':').length == 2
-                              ? int.parse(serverUrl.split(':').last)
+                          port = _server.text.split(':').length == 2
+                              ? int.parse(_server.text.split(':').last)
                               : _isHttps
                                   ? 443
                                   : 80;
+                          print(port);
                         } catch (e) {
                           _setserverError('Invalid server address');
                         }

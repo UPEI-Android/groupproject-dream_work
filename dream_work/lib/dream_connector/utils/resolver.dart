@@ -10,8 +10,11 @@ enum Path {
 }
 
 /// build the path for the request
-Future<Uri> pathResolver(
-    {required Path path, required DreamCore dreamCore}) async {
+Future<Uri> pathResolver({
+  required Path path,
+  required DreamCore dreamCore,
+  String? tid,
+}) async {
   late String _path;
   switch (path) {
     case Path.register:
@@ -24,14 +27,14 @@ Future<Uri> pathResolver(
       _path = '/api/auth/logout';
       break;
     case Path.all:
-      _path = '/api/todos';
+      _path = '/api/tasks';
       break;
     case Path.single:
-      _path = '/api/todo/';
+      _path = '/api/tasks/';
       break;
   }
   final serverUrl = await dreamCore.coreState();
-  final Uri urlWithPath = Uri.parse(serverUrl.toString() + _path);
+  final Uri urlWithPath = Uri.parse(serverUrl.toString() + _path + (tid ?? ''));
   logger('utils_pathResolver: $urlWithPath');
 
   return urlWithPath;

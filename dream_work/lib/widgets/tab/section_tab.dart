@@ -1,7 +1,7 @@
 import 'package:dream_work/routes/route_generator.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
-import '../../screens/screens.dart';
+import '../../router.dart';
 import '../../utils/utils.dart';
 import '../widgets.dart';
 
@@ -12,7 +12,7 @@ class TeamTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: DreamDatabase.instance.allItem,
+      stream: DreamDatabase.instance.items,
       builder: (BuildContext context, AsyncSnapshot snap) {
         if (snap.data == null || snap.hasError) {
           return const Center(
@@ -41,7 +41,7 @@ class TeamTab extends StatelessWidget {
                 precent: sectionFinishedPercentage[sections[index]] ?? 0),
             onTap: () => Navigator.pushNamed(
               context,
-              RouteGenerator.individualScreen,
+              Routing.individual,
               arguments: sections[index],
             ),
           ),

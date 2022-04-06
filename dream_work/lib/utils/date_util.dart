@@ -27,12 +27,11 @@ String monthToString([int monthsAgo = 0]) =>
 
 /// find number of tasks in each day
 /// return a List<dynamic> with format:
-/// [{month: 1, day: 1}, {month: 1, day: 2}, ...]
 List<int> numberOfTasksInEachDay(List<Map<String, dynamic>> soruceData) {
   final today = DateTime.now();
   return soruceData
       .map(
-        (e) => daysBetween(today, DateTime.parse(e['created_at'])),
+        (e) => -daysBetween(today, DateTime.parse(e['created_at'])),
       )
       .toList();
 }

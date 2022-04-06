@@ -1,4 +1,3 @@
-import 'package:dream_work/dream_connector/dream_connector.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'utils.dart';
@@ -9,12 +8,10 @@ import 'utils.dart';
 ///
 /// If state code is not 200 throw Error.
 Future<String> post({
-  required Path path,
+  required Uri url,
   required Map<String, String> headers,
   required String body,
-  required DreamCore dreamCore,
 }) async {
-  final Uri url = await pathResolver(path: path, dreamCore: dreamCore);
   final http.Client client = http.Client();
   final response = await client.post(url, headers: headers, body: body);
 
@@ -33,12 +30,10 @@ Future<String> post({
 ///
 /// If state code is not 200 throw Error.
 Future<String> delete({
-  required Path path,
+  required Uri url,
   required Map<String, String> headers,
   required String body,
-  required DreamCore dreamCore,
 }) async {
-  final Uri url = await pathResolver(path: path, dreamCore: dreamCore);
   final http.Client client = http.Client();
   final response = await client.delete(url, headers: headers, body: body);
 

@@ -3,6 +3,7 @@ import type { todoItem } from '@prisma/client';
 import authenticateToken, {ExtendedRequest} from '../../../lib/middleware/authenticateToken';
 import DatabaseClient from '../../../lib/dbclient'
 import nc from 'next-connect'
+import logger from '../../../lib/middleware/logger';
 
 const dbclient = DatabaseClient.getInstance().client;
 
@@ -16,6 +17,7 @@ export default nc<NextApiRequest, NextApiResponse>({
 })
 
 .use(authenticateToken)
+.use(logger)
 
 // query a todo item by its tid(todo item id)
 .get(async (req : ExtendedRequest, res: NextApiResponse)=> {

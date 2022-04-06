@@ -48,7 +48,7 @@ class DreamAuth {
   /// getter for [auth]
   get authToekn {
     _authToken == null ? throw Exception('AuthToken is null') : null;
-    logger('dreamAuth_authToken: $_authToken');
+    logger('dreamAuth_authToken: ${_authToken != null ? 'loaded' : 'null'}');
     return json.decode(_authToken!)['accessToken'];
   }
 
@@ -67,24 +67,23 @@ class DreamAuth {
   ///
   /// If unsuccessful, throw an error.
   Future createUserWithEmailAndPassword({
-    String? userName,
+    String? name,
     required String email,
     required String password,
   }) async {
     final Map<String, String> headers = headerResolver();
+    name ??= email;
     final String body = jsonEncode({
-      'username': userName ?? email,
+      'name': name,
       'email': email,
       'password': password,
     });
+    final Uri url =
+        await pathResolver(path: Path.register, dreamCore: _dreamCore);
 
     logger('dreamAuth_createUserWithEmailAndPassword: $body');
 
-    await post(
-        path: Path.register,
-        headers: headers,
-        body: body,
-        dreamCore: _dreamCore);
+    await post(url: url, headers: headers, body: body);
     await loginWithEmailAndPassword(email: email, password: password);
   }
 
@@ -102,11 +101,11 @@ class DreamAuth {
       'email': email,
       'password': password,
     });
+    final Uri url = await pathResolver(path: Path.login, dreamCore: _dreamCore);
 
     logger('dreamAuth_loginWithEmailAndPassword: $body');
 
-    _authToken = await post(
-        path: Path.login, headers: headers, body: body, dreamCore: _dreamCore);
+    _authToken = await post(url: url, headers: headers, body: body);
     _authStateStream.add(Jwt.parseJwt(_authToken!));
   }
 }

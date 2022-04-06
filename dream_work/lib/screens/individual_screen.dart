@@ -1,5 +1,6 @@
+import 'package:dream_work/router.dart';
+
 import '../dream_connector/dream_connector.dart';
-import 'package:dream_work/screens/screens.dart';
 import 'package:flutter/material.dart';
 import '../routes/route_generator.dart';
 import '../widgets/widgets.dart';
@@ -10,26 +11,12 @@ class IndividualScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   State<IndividualScreen> createState() => _IndividualScreenState();
 }
 
 class _IndividualScreenState extends State<IndividualScreen> {
   late String section;
-  late final TextEditingController _title;
-
-  @override
-  void initState() {
-    super.initState();
-    _title = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _title.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +42,9 @@ class _IndividualScreenState extends State<IndividualScreen> {
                     TextButton(
                       child: const Text('Yes'),
                       onPressed: () async {
-                        await DreamDatabase.instance.deleteAll();
-                        Navigator.pushNamed(context, RouteGenerator.homeScreen);
+
+                        await deleteSectionWithTitle(title: section);
+                        Navigator.pushNamed(context, Routing.home);
                       },
                     ),
                     TextButton(
@@ -89,7 +77,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
 
   /// build a list of [TaskTag]
   Widget todoList() => StreamBuilder(
-        stream: DreamDatabase.instance.allItem,
+        stream: DreamDatabase.instance.items,
         builder: (BuildContext context, AsyncSnapshot snap) {
           if (snap.data == null) {
             return const Center(
@@ -104,7 +92,6 @@ class _IndividualScreenState extends State<IndividualScreen> {
           double sectionFinishedPercentage = findFinishPercentageBySection(
               sourceData: snap.data, section: section);
           return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GeneralCard(
                 child: Row(
@@ -120,8 +107,9 @@ class _IndividualScreenState extends State<IndividualScreen> {
                 child: ListView.builder(
                   itemCount: taskList.length,
                   itemBuilder: (context, index) => TaskCard(
-                    isDone: taskList[index]['isDone'] as bool,
-                    content: taskList[index]['content'] as String,
+                    tid: taskList[index]['tid'],
+                    isDone: taskList[index]['isDone'],
+                    content: taskList[index]['content'],
                   ),
                 ),
               )

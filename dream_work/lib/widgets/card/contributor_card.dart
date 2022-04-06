@@ -19,7 +19,7 @@ class Contributors extends StatelessWidget {
           _monthText(1),
           _monthText(2),
           StreamBuilder(
-            stream: DreamDatabase.instance.allItem,
+            stream: DreamDatabase.instance.items,
             builder: (context, AsyncSnapshot snap) {
               if (snap.data == null) {
                 return const Center(
@@ -42,7 +42,7 @@ class Contributors extends StatelessWidget {
                         for (int j = 0; j < 7; j++)
                           _block(
                             taskNum: data
-                                .where((element) => element == j + i)
+                                .where((element) => element == 7 * i + j)
                                 .length,
                           ),
                       ],
