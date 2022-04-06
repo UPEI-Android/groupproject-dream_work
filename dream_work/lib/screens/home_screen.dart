@@ -104,7 +104,9 @@ class _HomeScreenState extends State<HomeScreen>
               return AddButton(
                 isLoading: snap.data ?? true,
                 onPressed: () {
-                  createTask(section: (DateTime.now()).toString());
+                  createTask(
+                      section:
+                          'Section ${(DateTime.now()).hashCode.toString()}');
                 },
               );
             },

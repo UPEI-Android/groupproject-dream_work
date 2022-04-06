@@ -82,14 +82,6 @@ class DreamDatabase {
         .then((value) => _readFromDatabaseAllItem());
   }
 
-  /// Read all the task item belong to the user
-  /// and update the stream
-  Future _readFromDatabaseAllItem() async {
-    final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
-    _databaseCache = data ?? [];
-    _databaseStream.add(_databaseCache);
-  }
-
   /// Delete all the task item belong to user
   Future deleteAll() async {
     await _deleteFromDatabase(path: Path.all)
@@ -100,6 +92,20 @@ class DreamDatabase {
   Future deleteOne({required String tid}) async {
     await _deleteFromDatabase(path: Path.single, tid: tid)
         .then((value) => _readFromDatabaseAllItem());
+  }
+
+  /// Read all the task item belong to the user
+  /// and update the stream
+  Future _readFromDatabaseAllItem() async {
+    final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
+    _databaseCache = data ?? [];
+    _databaseCache.sort((a, b) {
+      if (a['due_at'] == null && b['due_at'] == null) {
+        return 0;
+      }
+      return 1;
+    });
+    _databaseStream.add(_databaseCache);
   }
 
   Future editOne({
