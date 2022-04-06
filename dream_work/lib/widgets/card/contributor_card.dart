@@ -31,6 +31,7 @@ class Contributors extends StatelessWidget {
 
               // find numeber of tasks in each day
               List<int> data = numberOfTasksInEachDay(snap.data);
+              print(data);
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -42,7 +43,7 @@ class Contributors extends StatelessWidget {
                         for (int j = 0; j < 7; j++)
                           _block(
                             taskNum: data
-                                .where((element) => element == j + i)
+                                .where((element) => element == 7 * i + j)
                                 .length,
                           ),
                       ],
