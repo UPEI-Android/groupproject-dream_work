@@ -28,7 +28,7 @@ class TeamTab extends StatelessWidget {
         final Map<String, double> sectionFinishedPercentage = {};
         for (final String section in sections) {
           sectionFinishedPercentage.addEntries(<String, double>{
-            section: findFinishPercentageBySection(
+            section: findFinishPrecentageBySection(
                 section: section, sourceData: snap.data)
           }.entries);
         }

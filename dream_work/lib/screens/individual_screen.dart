@@ -42,7 +42,6 @@ class _IndividualScreenState extends State<IndividualScreen> {
                     TextButton(
                       child: const Text('Yes'),
                       onPressed: () async {
-
                         await deleteSectionWithTitle(title: section);
                         Navigator.pushNamed(context, Routing.home);
                       },
@@ -89,7 +88,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
 
           List<dynamic> taskList =
               findItemsBySecion(sourceData: snap.data, section: section);
-          double sectionFinishedPercentage = findFinishPercentageBySection(
+          double sectionFinishedPercentage = findFinishPrecentageBySection(
               sourceData: snap.data, section: section);
           return Column(
             children: [
