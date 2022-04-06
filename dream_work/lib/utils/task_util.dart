@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import '../dream_connector/dream_connector.dart';
 
 /// create a new individual todo item
@@ -17,4 +15,8 @@ createTask({required String section}) async {
     "content": "",
   };
   await DreamDatabase.instance.writeOne(map);
+}
+
+createSection() {
+  createTask(section: 'Section_${(DateTime.now()).hashCode.toString()}');
 }

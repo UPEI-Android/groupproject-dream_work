@@ -73,17 +73,18 @@ class _HomeScreenState extends State<HomeScreen>
                 child: StreamBuilder(
                   stream: DreamDatabase.instance.connectedState,
                   builder: (context, AsyncSnapshot snap) {
-                    return snap.hasData || snap.data != null || snap.data
-                        ? const Icon(
-                            Icons.cloud_circle,
-                            color: Colors.green,
-                            size: 15,
-                          )
-                        : const Icon(
-                            Icons.cloud_circle,
-                            color: Colors.red,
-                            size: 15,
-                          );
+                    if (snap.data == null) {
+                      return const Icon(
+                        Icons.cloud_circle,
+                        color: Colors.red,
+                        size: 15,
+                      );
+                    }
+                    return const Icon(
+                      Icons.cloud_circle,
+                      color: Colors.green,
+                      size: 15,
+                    );
                   },
                 ),
               ),
@@ -104,9 +105,7 @@ class _HomeScreenState extends State<HomeScreen>
               return AddButton(
                 isLoading: snap.data ?? true,
                 onPressed: () {
-                  createTask(
-                      section:
-                          'Section ${(DateTime.now()).hashCode.toString()}');
+                  createSection();
                 },
               );
             },

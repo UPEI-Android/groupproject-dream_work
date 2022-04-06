@@ -48,7 +48,7 @@ class DreamAuth {
   /// getter for [auth]
   get authToekn {
     _authToken == null ? throw Exception('AuthToken is null') : null;
-    logger('dreamAuth_authToken: $_authToken');
+    logger('dreamAuth_authToken: ${_authToken != null ? 'loaded' : 'null'}');
     return json.decode(_authToken!)['accessToken'];
   }
 

@@ -30,21 +30,23 @@ List<dynamic> findSections({
 }
 
 /// rename the section
-Future sectionTitleEditer({
+Future<String> editSectionTitle({
   required String newTitle,
   required String oldTitle,
 }) async {
   // find all the element with the old title and change it to the new title
   var data = await DreamDatabase.instance.allItem;
-  data.value.forEach(
-    (element) {
-      if (element['section'] == oldTitle) {
-        element['section'] = newTitle;
-      }
-    },
-  );
-  await deleteSectionWithTitle(title: oldTitle);
-  await DreamDatabase.instance.writeAll(data.value);
+
+  final List<Map<String, dynamic>> newSection =
+      List.from(data.value.where((e) => e['section'] == oldTitle).toList());
+
+  for (var element in newSection) {
+    await DreamDatabase.instance.deleteOne(tid: element['tid'], refresh: false);
+    element['section'] = newTitle;
+  }
+
+  await DreamDatabase.instance.writeAll(newSection);
+  return newTitle;
 }
 
 /// delete all the task item belong to the section
@@ -52,7 +54,7 @@ Future deleteSectionWithTitle({
   required String title,
 }) async {
   var data = await DreamDatabase.instance.allItem;
-  data.value.where((e) => e['section'] == title).forEach(
+  await data.value.where((e) => e['section'] == title).forEach(
         (e) async => await DreamDatabase.instance.deleteOne(tid: e['tid']),
       );
 }

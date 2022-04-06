@@ -27,7 +27,7 @@ class DreamDatabase {
 
   /// Return a stream contains all the todoitems belong to the user
   get allItem {
-    _readFromDatabaseAllItem();
+    () {};
     return _databaseStream;
   }
 
@@ -47,20 +47,25 @@ class DreamDatabase {
   /// This method is called when the app is opened
   connect() {
     if (_isConnectedStream.value == true) return;
+    _isConnectedStream.add(true);
     _readFromDatabaseAllItem();
     // todo find a way to check if the database is updated
-    // Timer.periodic(
-    //   const Duration(seconds: 15),
-    //   (timer) {
-    //     // cancel timer if not connected
-    //     _isConnectedStream.value ? null : timer.cancel();
-    //     _readFromDatabaseAllItem()
-    //         .then((value) => _isConnectedStream.add(true))
-    //         .catchError((e) {
-    //       _isConnectedStream.add(false);
-    //     });
-    //   },
-    // );
+    Timer.periodic(
+      const Duration(seconds: 10),
+      (timer) async {
+        logger(
+            'Timer Active: ${timer.isActive}----------------------------------------------------------');
+        // cancel timer if not connected
+        _isConnectedStream.value ? null : timer.cancel();
+        await _readFromDatabaseAllItem()
+            .then((value) => _isConnectedStream.add(true))
+            .catchError((e) {
+          _isConnectedStream.add(false);
+        });
+        logger(
+            '----------------------------------------------------------------------------');
+      },
+    );
   }
 
   void disconnect() async {
@@ -73,32 +78,32 @@ class DreamDatabase {
   /// Write one task item to server
   Future writeOne(Map<String, dynamic> item) async {
     await _writeToDatabase(path: Path.all, items: [item])
-        .then((value) => _readFromDatabaseAllItem());
+        .then((value) async => await _readFromDatabaseAllItem());
   }
 
   /// Write all task items to server
   Future writeAll(List<Map<String, dynamic>> items) async {
     await _writeToDatabase(path: Path.all, items: items)
-        .then((value) => _readFromDatabaseAllItem());
+        .then((value) async => await _readFromDatabaseAllItem());
   }
 
   /// Delete all the task item belong to user
   Future deleteAll() async {
     await _deleteFromDatabase(path: Path.all)
-        .then((value) => _readFromDatabaseAllItem());
+        .then((value) async => await _readFromDatabaseAllItem());
   }
 
   /// Delete one task item from server
   Future deleteOne({required String tid, bool? refresh}) async {
     await _deleteFromDatabase(path: Path.single, tid: tid)
-        .then((value) => refresh ?? _readFromDatabaseAllItem());
+        .then((value) async => refresh ?? await _readFromDatabaseAllItem());
   }
 
   /// Read all the task item belong to the user
   /// and update the stream
   Future _readFromDatabaseAllItem() async {
     await _readFromDatabase(Path.all).then((value) {
-      _databaseCache == value;
+      _databaseCache = value ?? [];
       _databaseCache.sort(
         (a, b) {
           if (int.parse(a['tid']) > int.parse(b['tid'])) {
@@ -111,8 +116,6 @@ class DreamDatabase {
     });
   }
 
-  /// edit one task item
-  /// todo replace the http method to PUT
   Future editOne({
     required String tid,
     String? section,

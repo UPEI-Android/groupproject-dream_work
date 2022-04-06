@@ -78,12 +78,13 @@ class _EditableSectionCardState extends State<EditableSectionCard> {
             border: InputBorder.none,
           ),
           onSubmitted: (value) async {
-            await sectionTitleEditer(newTitle: value, oldTitle: widget.title);
+            final newTitle =
+                await editSectionTitle(newTitle: value, oldTitle: widget.title);
             Navigator.pop(context);
             Navigator.pushNamed(
               context,
               IndividualScreen.routeName,
-              arguments: value,
+              arguments: newTitle,
             );
           },
         ),
