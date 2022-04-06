@@ -1,3 +1,5 @@
+import 'package:dream_work/dream_connector/dream_connector.dart';
+import 'package:dream_work/utils/utils.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:dream_work/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +8,14 @@ import 'package:flutter/material.dart';
 class TaskCard extends StatefulWidget {
   const TaskCard({
     Key? key,
+    required this.tid,
     required this.isDone,
     this.height = 45,
     this.content,
     this.child,
   }) : super(key: key);
 
+  final String tid;
   final bool isDone;
   final double height;
   final String? content;
@@ -23,9 +27,23 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   final TextEditingController _text = TextEditingController();
+  bool _isDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDone = widget.isDone;
+  }
+
+  void setIsDone(bool done) {
+    setState(() {
+      _isDone = done;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    //setIsDone(widget.isDone);
     _text.text = widget.content ?? 'new task';
     return Slidable(
       startActionPane: ActionPane(
@@ -61,7 +79,7 @@ class _TaskCardState extends State<TaskCard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _checkBox(isDone: widget.isDone),
+            _checkBox(),
             Expanded(child: _editableText()),
             widget.child ?? Container(),
           ],
@@ -92,16 +110,14 @@ class _TaskCardState extends State<TaskCard> {
   ///----------------------------------------------------------------------------
   /// This is the checkbox for the todo tag, pass in a bool to set the state.
   ///----------------------------------------------------------------------------
-  Widget _checkBox({
-    required bool isDone,
-  }) =>
-      Checkbox(
+  Widget _checkBox() => Checkbox(
         shape: const CircleBorder(),
         activeColor: Colors.green,
         checkColor: Colors.green,
-        value: isDone,
-        onChanged: (value) {
-          isDone = true;
+        value: _isDone,
+        onChanged: (bool? value) async {
+          setIsDone(!_isDone);
+          await DreamDatabase.instance.editOne(tid: widget.tid, isDone: value);
         },
       );
 }

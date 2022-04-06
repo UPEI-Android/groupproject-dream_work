@@ -67,20 +67,20 @@ class DreamDatabase {
   }
 
   /// Write one task item to server
-  Future<void> writeOne(Map<String, dynamic> item) async {
+  Future writeOne(Map<String, dynamic> item) async {
     await _writeToDatabase(path: Path.all, items: [item])
         .then((value) => _readFromDatabaseAllItem());
   }
 
   /// Write all task items to server
-  Future<void> writeAll(List<Map<String, dynamic>> items) async {
+  Future writeAll(List<Map<String, dynamic>> items) async {
     await _writeToDatabase(path: Path.all, items: items)
         .then((value) => _readFromDatabaseAllItem());
   }
 
   /// Read all the task item belong to the user
   /// and update the stream
-  Future<void> _readFromDatabaseAllItem() async {
+  Future _readFromDatabaseAllItem() async {
     final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
     _databaseStream.add(data);
   }
@@ -93,7 +93,39 @@ class DreamDatabase {
 
   /// Delete one task item from server
   Future deleteOne({required String tid}) async {
-    await _deleteFromDatabase(path: Path.single, tid: tid);
+    await _deleteFromDatabase(path: Path.single, tid: tid)
+        .then((value) => _readFromDatabaseAllItem());
+  }
+
+  Future editOne({
+    required String tid,
+    String? section,
+    String? context,
+    String? memeber,
+    bool? isDone,
+    String? updateBy,
+    DateTime? dueAt,
+  }) async {
+    try {
+      var data = await DreamDatabase.instance.allItem;
+      var taskItem = data.value
+          .where(
+            (element) => element['tid'] == tid,
+          )
+          .toList()[0];
+
+      // taskItem['section'] = section ?? taskItem['section'];
+      // taskItem['context'] = context ?? taskItem['context'];
+      // taskItem['member'] = memeber ?? taskItem['member'];
+      taskItem['isDone'] = isDone ?? taskItem['isDone'];
+      // taskItem['update_by'] = updateBy ?? taskItem['update_by'];
+      // taskItem['due_at'] = dueAt ?? taskItem['due_at'];
+      await DreamDatabase.instance.deleteOne(tid: tid);
+      await DreamDatabase.instance.writeOne(taskItem);
+    } catch (e) {
+      logger(e.toString());
+      throw Exception(e);
+    }
   }
 
   /// Read task items from server
@@ -133,7 +165,7 @@ class DreamDatabase {
   }
 
   /// Delete task items from server
-  Future<void> _deleteFromDatabase({
+  Future _deleteFromDatabase({
     required Path path,
     String? tid,
   }) async {

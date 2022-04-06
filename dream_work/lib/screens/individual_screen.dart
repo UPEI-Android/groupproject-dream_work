@@ -54,7 +54,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                     TextButton(
                       child: const Text('Yes'),
                       onPressed: () async {
-                        await deleteSectionWithTitle(title: section);
+                        deleteSectionWithTitle(title: section);
                         Navigator.pushNamed(context, HomeScreen.routeName);
                       },
                     ),
@@ -119,8 +119,9 @@ class _IndividualScreenState extends State<IndividualScreen> {
                 child: ListView.builder(
                   itemCount: taskList.length,
                   itemBuilder: (context, index) => TaskCard(
-                    isDone: taskList[index]['isDone'] as bool,
-                    content: taskList[index]['content'] as String,
+                    tid: taskList[index]['tid'],
+                    isDone: taskList[index]['isDone'],
+                    content: taskList[index]['content'],
                   ),
                 ),
               )
