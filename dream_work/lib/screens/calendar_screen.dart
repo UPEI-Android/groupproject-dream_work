@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
   static const routeName = '/calendar';
+
+
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -14,6 +17,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat _format = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay =  DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+  Future<void> initialization() async {
+
+    await Future.delayed(const Duration(seconds: 3));
+    FlutterNativeSplash.remove();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +61,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           _focusedDay = focusedDay;
         },
 
-        eventLoader: (day) {
-          return _getTODOsForDay(day); //TODO get the task the person has to do for that day
-        },
+
       ),
     );
   }
+
+
 }
