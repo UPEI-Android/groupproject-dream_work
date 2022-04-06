@@ -77,14 +77,12 @@ class DreamAuth {
       'email': email,
       'password': password,
     });
+    final Uri url =
+        await pathResolver(path: Path.register, dreamCore: _dreamCore);
 
     logger('dreamAuth_createUserWithEmailAndPassword: $body');
 
-    await post(
-        path: Path.register,
-        headers: headers,
-        body: body,
-        dreamCore: _dreamCore);
+    await post(url: url, headers: headers, body: body);
     await loginWithEmailAndPassword(email: email, password: password);
   }
 
@@ -102,11 +100,11 @@ class DreamAuth {
       'email': email,
       'password': password,
     });
+    final Uri url = await pathResolver(path: Path.login, dreamCore: _dreamCore);
 
     logger('dreamAuth_loginWithEmailAndPassword: $body');
 
-    _authToken = await post(
-        path: Path.login, headers: headers, body: body, dreamCore: _dreamCore);
+    _authToken = await post(url: url, headers: headers, body: body);
     _authStateStream.add(Jwt.parseJwt(_authToken!));
   }
 }

@@ -3,7 +3,7 @@ import 'package:dream_work/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 /// cutomized card for individual screen
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   const TaskCard({
     Key? key,
     required this.isDone,
@@ -18,7 +18,15 @@ class TaskCard extends StatelessWidget {
   final Widget? child;
 
   @override
+  State<TaskCard> createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
+  final TextEditingController _text = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    _text.text = widget.content ?? 'new task';
     return Slidable(
       startActionPane: ActionPane(
         motion: const ScrollMotion(),
@@ -48,14 +56,14 @@ class TaskCard extends StatelessWidget {
   }
 
   Widget _card() => GeneralCard(
-        height: height,
+        height: widget.height,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _checkBox(isDone: isDone),
-            Expanded(child: _editableText(content: content)),
-            child ?? Container(),
+            _checkBox(isDone: widget.isDone),
+            Expanded(child: _editableText()),
+            widget.child ?? Container(),
           ],
         ),
       );
@@ -63,20 +71,22 @@ class TaskCard extends StatelessWidget {
   ///----------------------------------------------------------------------------
   /// This is the editable content of the tag
   ///----------------------------------------------------------------------------
-  Widget _editableText({
-    String? content,
-  }) =>
-      TextField(
-        style: const TextStyle(
-          color: Colors.white,
-        ),
-        decoration: InputDecoration(
-          hintText: content ?? 'new task',
+  Widget _editableText() => TextField(
+        controller: _text,
+        textInputAction: TextInputAction.done,
+        keyboardType: TextInputType.text,
+        style: const TextStyle(color: Colors.white),
+        decoration: const InputDecoration(
+          hintText: 'New Task',
           border: InputBorder.none,
-          hintStyle: const TextStyle(
-            color: Colors.white,
+          hintStyle: TextStyle(
+            color: Colors.grey,
           ),
         ),
+        onSubmitted: (value) {
+          // todo : update the value to the database
+          print(value);
+        },
       );
 
   ///----------------------------------------------------------------------------

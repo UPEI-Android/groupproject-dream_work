@@ -54,7 +54,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                     TextButton(
                       child: const Text('Yes'),
                       onPressed: () async {
-                        await DreamDatabase.instance.deleteAll();
+                        await deleteSectionWithTitle(title: section);
                         Navigator.pushNamed(context, HomeScreen.routeName);
                       },
                     ),

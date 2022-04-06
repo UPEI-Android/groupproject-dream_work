@@ -4,7 +4,7 @@ class GeneralCard extends StatelessWidget {
   const GeneralCard({
     Key? key,
     this.height,
-    this.padding = const EdgeInsets.only(left: 28, right: 28, top: 13),
+    this.padding = const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
     this.child,
     this.onTap,
     this.backgroundColor = const Color.fromARGB(255, 28, 41, 83),

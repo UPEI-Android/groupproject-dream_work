@@ -45,18 +45,19 @@ class DreamDatabase {
   connect() {
     if (_isConnectedStream.value == true) return;
     _readFromDatabaseAllItem();
-    Timer.periodic(
-      const Duration(seconds: 15),
-      (timer) {
-        // cancel timer if not connected
-        _isConnectedStream.value ? null : timer.cancel();
-        _readFromDatabaseAllItem()
-            .then((value) => _isConnectedStream.add(true))
-            .catchError((e) {
-          _isConnectedStream.add(false);
-        });
-      },
-    );
+    // todo find a way to check if the database is updated
+    // Timer.periodic(
+    //   const Duration(seconds: 15),
+    //   (timer) {
+    //     // cancel timer if not connected
+    //     _isConnectedStream.value ? null : timer.cancel();
+    //     _readFromDatabaseAllItem()
+    //         .then((value) => _isConnectedStream.add(true))
+    //         .catchError((e) {
+    //       _isConnectedStream.add(false);
+    //     });
+    //   },
+    // );
   }
 
   void disconnect() async {
@@ -77,17 +78,22 @@ class DreamDatabase {
         .then((value) => _readFromDatabaseAllItem());
   }
 
+  /// Read all the task item belong to the user
+  /// and update the stream
+  Future<void> _readFromDatabaseAllItem() async {
+    final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
+    _databaseStream.add(data);
+  }
+
   /// Delete all the task item belong to user
   Future deleteAll() async {
     await _deleteFromDatabase(path: Path.all)
         .then((value) => _readFromDatabaseAllItem());
   }
 
-  /// Read all the task item belong to the user
-  /// and update the stream
-  Future<void> _readFromDatabaseAllItem() async {
-    final List<Map<String, dynamic>>? data = await _readFromDatabase(Path.all);
-    _databaseStream.add(data);
+  /// Delete one task item from server
+  Future deleteOne({required String tid}) async {
+    await _deleteFromDatabase(path: Path.single, tid: tid);
   }
 
   /// Read task items from server
@@ -108,17 +114,19 @@ class DreamDatabase {
   Future _writeToDatabase({
     required Path path,
     required List<Map<String, dynamic>> items,
+    String? tid,
   }) async {
     loadingState.add(true);
     final authToken = await DreamAuth.instance.authToekn;
     final Map<String, String> headers = headerResolver(authToken);
     // request body
     final String body = jsonEncode(items);
+    final Uri url =
+        await pathResolver(path: path, dreamCore: _dreamCore, tid: tid);
 
     logger('_writeToDatabase: ${body.toString().split(":").first}');
 
-    await post(path: path, headers: headers, body: body, dreamCore: _dreamCore)
-        .catchError((e) {
+    await post(url: url, headers: headers, body: body).catchError((e) {
       throw Exception('faild to write to database: $e');
     });
     loadingState.add(false);
@@ -127,17 +135,19 @@ class DreamDatabase {
   /// Delete task items from server
   Future<void> _deleteFromDatabase({
     required Path path,
+    String? tid,
   }) async {
     loadingState.add(true);
     final authToken = await DreamAuth.instance.authToekn;
     final Map<String, String> headers = headerResolver(authToken);
     // todo change this request body
     final String body = jsonEncode([]);
+    final Uri url =
+        await pathResolver(path: path, dreamCore: _dreamCore, tid: tid);
 
     logger('_delete: ${body.toString().split(":").first}');
 
-    await delete(
-            path: path, headers: headers, body: body, dreamCore: _dreamCore)
+    await delete(url: url, headers: headers, body: body)
         .catchError((e) => throw Exception('faild to delete: $e'));
     loadingState.add(false);
   }
