@@ -103,7 +103,6 @@ class _IndividualScreenState extends State<IndividualScreen> {
           double sectionFinishedPercentage = findFinishPrecentageBySection(
               sourceData: snap.data, section: section);
           return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GeneralCard(
                 child: Row(

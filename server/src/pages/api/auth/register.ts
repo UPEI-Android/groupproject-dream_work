@@ -16,14 +16,12 @@ export default nc<NextApiRequest, NextApiResponse>({
 })
 
 .post(async (req : NextApiRequest, res : NextApiResponse) => {
-    let { username, email, password } : user = req.body
-    if(!(password && (username || email))) return res.status(400).json({ error: 'Incomplete information provided' })
-    if(!username) username = email;
+    let { email, password, name } : user = req.body
+    if(!(password || !email || !name)) return res.status(400).json({ error: 'Incomplete information provided' })
     const data = await dbclient.user.create({
         data: {
-            username: username,
             password: password,
-            name: username,
+            name: name,
             email: email,
         }
     })

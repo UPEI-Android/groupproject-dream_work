@@ -67,13 +67,13 @@ class DreamAuth {
   ///
   /// If unsuccessful, throw an error.
   Future createUserWithEmailAndPassword({
-    String? userName,
+    String? name,
     required String email,
     required String password,
   }) async {
     final Map<String, String> headers = headerResolver();
     final String body = jsonEncode({
-      'username': userName ?? email,
+      'name': name,
       'email': email,
       'password': password,
     });

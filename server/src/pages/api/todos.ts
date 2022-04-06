@@ -2,8 +2,8 @@ import type { NextApiResponse, NextApiRequest } from 'next'
 import type { todoItem } from '@prisma/client';
 import DatabaseClient from '../../lib/dbclient'
 import authenticateToken, {ExtendedRequest} from '../../lib/middleware/authenticateToken';
-import generalHandler from '../../lib/handler/handler';
 import nc from 'next-connect'
+import logger from '../../lib/middleware/logger';
 
 const dbclient = DatabaseClient.getInstance().client;
             
@@ -16,6 +16,7 @@ export default nc<NextApiRequest, NextApiResponse>({
     },
 })
 .use(authenticateToken)
+.use(logger)
 
 // query all items by uid (user id)
 .get(async (req : ExtendedRequest, res: NextApiResponse)=> {
@@ -27,7 +28,6 @@ export default nc<NextApiRequest, NextApiResponse>({
             }
         }
     })
-
     if(data === null) return res.status(400).json({ error: 'No todo item found' });
     res.status(200).json(data);
 })

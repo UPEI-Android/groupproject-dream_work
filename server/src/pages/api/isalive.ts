@@ -1,5 +1,6 @@
 import generalHandler from '../../lib/handler/handler';
 import type { NextApiResponse, NextApiRequest } from 'next'
+import logger from '../../lib/middleware/logger';
 
 export default Object.create(generalHandler)
 
@@ -9,3 +10,5 @@ export default Object.create(generalHandler)
         message: 'message: server is alive'
     })
 })
+
+.use(logger)
