@@ -44,7 +44,7 @@ class RouteGenerator {
       return MaterialPageRoute(builder: (context) =>  const UnknownScreen());
     }
     else {
-      return MaterialPageRoute(builder: (context) => const HomeScreen());
+      return MaterialPageRoute(builder: (context) => const AuthScreen());
     }
   }
 
