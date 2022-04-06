@@ -31,21 +31,6 @@ $ROOT
 └── test                     
 ```
 
-### UI
-#### Unified Design
-![[Pasted image 20220406053918.png]]
-![[Pasted image 20220406053944.png]]
-![[Pasted image 20220406054006.png]]
-
-#### Card design
-![[Pasted image 20220406054136.png]]
-![[Pasted image 20220406054112.png]]
-![[Pasted image 20220406054158.png]]
-
-#### Tabs
-![[Pasted image 20220406054229.png]]
-
-
 
 ### Dream Connector
 - A flutterfire like library
@@ -155,10 +140,28 @@ DreamDatabase.instance.readMany();
 DreamDatabase.instance.deleteOne();
 DreamDatabase.instance.deleteMany();
 
+/// !!! This is the data get from server that you can use!!!
 /// Return a stream contains all the todoitems belong to the user
 DreamDatabase.instance.items();
 
-/// and few private methos
+/// To use this stream
+return StreamBuilder(
+      stream: DreamDatabase.instance.items,
+      builder: (BuildContext context, AsyncSnapshot snap) {
+      /// if no data in the stream, show a loading
+        if (snap.data == null || snap.hasError) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.greenAccent,
+            ),
+          );
+        }
+	return ListView.builder(
+          itemCount: snap.data.length,
+          itemBuilder: (context, index) => print(snap.data[index])
+          ),
+        );
+	
 ```
 
 Initialize core -> login -> connect API.
