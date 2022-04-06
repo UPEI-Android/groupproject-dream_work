@@ -8,7 +8,7 @@ List<dynamic> findItemsBySecion({
   return sourceData.where((e) => e['section'] == section).toList();
 }
 
-/// calculate the precentage off finished task in this section.
+/// calculate the precentage of finished task in this section.
 double findFinishPrecentageBySection({
   required dynamic sourceData,
   required String section,
@@ -49,12 +49,11 @@ Future<String> editSectionTitle({
   return newTitle;
 }
 
-/// delete all the task item belong to the section
+/// delete all the task items in a give section
 Future deleteSectionWithTitle({
   required String title,
 }) async {
-  var data = await DreamDatabase.instance.items;
-  await data.value.where((e) => e['section'] == title).forEach(
-        (e) async => await DreamDatabase.instance.deleteOne(tid: e['tid']),
-      );
+  await DreamDatabase.instance.items.value
+      .where((e) => e['section'] == title)
+      .forEach((e) => DreamDatabase.instance.deleteOne(tid: e['tid']));
 }

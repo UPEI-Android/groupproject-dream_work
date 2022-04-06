@@ -51,7 +51,7 @@ class DreamDatabase {
     readMany();
     // todo find a way to check if the database is updated
     Timer.periodic(
-      const Duration(seconds: 10),
+      const Duration(seconds: 30),
       (timer) async {
         logger(
             'Timer Active: ${timer.isActive}----------------------------------------------------------');
@@ -102,11 +102,11 @@ class DreamDatabase {
   /// Read all the task item belong to the user
   /// and update the stream
   Future readMany() async {
-    await _readFromDatabase(Path.all).then((value) {
+    await readFromDatabase(Path.all).then((value) {
       _databaseCache = value ?? [];
       _databaseCache.sort(
         (a, b) {
-          if (int.parse(a['tid']) > int.parse(b['tid'])) {
+          if (int.parse(a['tid'], radix: 16) > int.parse(b['tid'], radix: 16)) {
             return 1;
           }
           return 0;
@@ -148,7 +148,7 @@ class DreamDatabase {
   }
 
   /// Read task items from server
-  Future<List<Map<String, dynamic>>?> _readFromDatabase(
+  Future<List<Map<String, dynamic>>?> readFromDatabase(
     Path path,
   ) async {
     loadingState.add(true);

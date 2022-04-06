@@ -80,8 +80,8 @@ class _EditableSectionCardState extends State<EditableSectionCard> {
           onSubmitted: (value) async {
             final newTitle =
                 await editSectionTitle(newTitle: value, oldTitle: widget.title);
-            Navigator.pop(context);
-            Navigator.pushNamed(
+
+            Navigator.pushReplacementNamed(
               context,
               Routing.individual,
               arguments: newTitle,

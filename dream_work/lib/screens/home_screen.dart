@@ -1,10 +1,10 @@
 // ignore_for_file: constant_identifier_names
+import 'package:dream_work/dream_connector/utils/utils.dart';
+
 import '../dream_connector/dream_connector.dart';
 import 'package:flutter/material.dart';
-import '../router.dart';
 import '../widgets/widgets.dart';
 import '../utils/utils.dart';
-import 'auth_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -41,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     DreamDatabase.instance.connect();
-
     return Scaffold(
       appBar: _appbar(context),
       body: SizedBox(
