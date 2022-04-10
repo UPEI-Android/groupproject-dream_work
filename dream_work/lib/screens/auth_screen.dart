@@ -18,9 +18,6 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isServerConnected = false;
   String? _error;
 
-
-
-
   void _setserverError([String? error]) {
     setState(() {
       _error = error;
@@ -41,10 +38,10 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> initialization() async {
-
     await Future.delayed(const Duration(seconds: 1));
     FlutterNativeSplash.remove();
   }
+
   @override
   void dispose() {
     _server.dispose();
