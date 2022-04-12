@@ -1,4 +1,4 @@
-import 'package:dream_work/routes/route_generator.dart';
+import 'package:dream_work/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../../dream_connector/dream_connector.dart';
 import '../../router.dart';
@@ -6,8 +6,10 @@ import '../../utils/utils.dart';
 import '../widgets.dart';
 
 class TeamTab extends StatelessWidget {
-  const TeamTab({Key? key}) : super(key: key);
+   const TeamTab({Key? key, required this.search}) : super(key: key);
+   final String search;
   //static const routeName = '/team';
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +26,14 @@ class TeamTab extends StatelessWidget {
 
         // find unique sections
         final List<dynamic> sections = findSections(sourceData: snap.data);
-        // find finished percentage for eachsection
+        if(search != ''){
+          sections.removeWhere((element) => !element.toString().startsWith(search));
+        }
+        // find finished percentage for each section
         final Map<String, double> sectionFinishedPercentage = {};
         for (final String section in sections) {
           sectionFinishedPercentage.addEntries(<String, double>{
-            section: findFinishPrecentageBySection(
+            section: findFinishPercentageBySection(
                 section: section, sourceData: snap.data)
           }.entries);
         }

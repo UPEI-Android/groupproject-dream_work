@@ -2,7 +2,7 @@ import 'package:dream_work/router.dart';
 
 import '../dream_connector/dream_connector.dart';
 import 'package:flutter/material.dart';
-import '../routes/route_generator.dart';
+
 import '../widgets/widgets.dart';
 import '../utils/utils.dart';
 
@@ -87,8 +87,8 @@ class _IndividualScreenState extends State<IndividualScreen> {
           }
 
           List<dynamic> taskList =
-              findItemsBySecion(sourceData: snap.data, section: section);
-          double sectionFinishedPercentage = findFinishPrecentageBySection(
+              findItemsBySection(sourceData: snap.data, section: section);
+          double sectionFinishedPercentage = findFinishPercentageBySection(
               sourceData: snap.data, section: section);
           return Column(
             children: [

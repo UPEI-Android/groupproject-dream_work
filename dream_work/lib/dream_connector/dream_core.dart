@@ -27,7 +27,7 @@ class DreamCore {
   /// [serverUrl] is the server url
   /// [serverPort] is the server port
   /// [serverProtocol] is the server protocol
-  DreamCore.initializeCore({
+  DreamCore.initializeCore( {
     required this.serverUrl,
     required this.serverPort,
     required this.serverProtocol,

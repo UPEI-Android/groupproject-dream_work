@@ -1,15 +1,15 @@
 import '../dream_connector/dream_connector.dart';
 
 /// find the task item that in this section.
-List<dynamic> findItemsBySecion({
+List<dynamic> findItemsBySection({
   required dynamic sourceData,
   required String section,
 }) {
   return sourceData.where((e) => e['section'] == section).toList();
 }
 
-/// calculate the precentage of finished task in this section.
-double findFinishPrecentageBySection({
+/// calculate the percentage of finished task in this section.
+double findFinishPercentageBySection({
   required dynamic sourceData,
   required String section,
 }) {

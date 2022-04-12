@@ -62,8 +62,13 @@ Widget _buttonHolder({required TabController tabController}) => Container(
             tabController: tabController,
           ),
           _navButton(
+            icon: const Icon(Icons.calendar_today),
+            index: 2,
+            tabController: tabController,
+          ),
+          _navButton(
               icon: const Icon(Icons.home),
-              index: 2,
+              index: 3,
               tabController: tabController),
         ],
       ),
