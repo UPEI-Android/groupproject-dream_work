@@ -3,6 +3,8 @@ Dream Work
 # Demo server
 - server: dream.luobo.ca
 - https: yes
+- account: demo@upei.ca
+- password: demo
 
 
 [GitHub](https://github.com/UPEI-Android/groupproject-dream_work)
