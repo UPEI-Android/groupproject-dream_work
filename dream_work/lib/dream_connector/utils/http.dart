@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'utils.dart';
+import 'logger.dart';
 
 /// Sent post request to server.
 ///
@@ -11,8 +11,9 @@ Future<String> post({
   required Uri url,
   required Map<String, String> headers,
   required String body,
+  http.Client? client,
 }) async {
-  final http.Client client = http.Client();
+  client ??= http.Client();
   final response = await client.post(url, headers: headers, body: body);
 
   logger(
@@ -33,8 +34,9 @@ Future<String> delete({
   required Uri url,
   required Map<String, String> headers,
   required String body,
+  http.Client? client,
 }) async {
-  final http.Client client = http.Client();
+  client ??= http.Client();
   final response = await client.delete(url, headers: headers, body: body);
 
   logger(
