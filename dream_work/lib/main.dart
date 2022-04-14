@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: colorCustom,
           fontFamily: 'Nunito',
         ),
-        initialRoute: Routing.calendar,
+        initialRoute: Routing.auth,
         routes: Routing.router());
   }
 }

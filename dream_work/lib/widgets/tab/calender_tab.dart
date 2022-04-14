@@ -10,8 +10,10 @@ class CalenderTab extends StatelessWidget {
     // return const Center(
     //     child: Icon(Icons.calendar_month, size: 64.0, color: Colors.green));
     return ListView(
-      children: [
+      children: const [
         Contributors(),
+        Divider(height: 15, color: Colors.transparent),
+        CalendarCard(),
       ],
     );
   }
