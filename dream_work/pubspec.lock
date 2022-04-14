@@ -72,7 +72,7 @@ packages:
     source: hosted
     version: "2.0.7"
   build_runner:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: build_runner
       url: "https://pub.dartlang.org"
@@ -360,7 +360,7 @@ packages:
     source: hosted
     version: "1.0.1"
   mockito:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: mockito
       url: "https://pub.dartlang.org"
